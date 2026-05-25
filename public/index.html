@@ -447,8 +447,10 @@ table.dt tbody tr:hover td{background:var(--srf2)}
 </div><!-- /layout -->
 
 <script>
-const API='http://localhost:3000';
-let dashLoaded=false;
+const API =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://memora-tdzu.onrender.com";let dashLoaded=false;
 
 // ── Sidebar queries (MEMORA first) ─────────────────────────
 const SIDEBAR=[
