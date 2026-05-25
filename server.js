@@ -88,11 +88,11 @@ function queryEngine(question, data) {
       type: 'memora',
       title: `Expert Discovery${keyword ? ` — ${keyword} Domain` : ' — All Domains'}`,
       summary: `MEMORA identified **${relevantTeam.length} subject-matter expert(s)**${keyword ? ` for ${keyword} issues` : ' across all domains'}. These experts have collectively resolved **${relevantInc.length} incidents** in the knowledge base. Expertise mapped from historical incident resolution records.`,
-      table: relevantTeam.map(e => ({ Name: e.Name, Team: e.Team, Role: e.Role, 'Expert In': e.Expert_In, Location: e.Location })),
+      table: relevantTeam.map(e => ({ Name: e.Name, Status: e.Status==='Left'?`Left (${e.LeftYear})`:'Active', Email: e.Email||'—', Team: e.Team, Role: e.Role, 'Expert In': e.Expert_In, Location: e.Location })),
       memory: `MEMORA expertise mapping: These ${relevantTeam.length} experts have the highest incident resolution rate in the ${keyword || 'relevant'} domain. Contact them directly for fastest resolution. Historical resolution data confirms their specialization.`,
       expertCards: relevantTeam.map(e => ({
         name: e.Name, team: e.Team, role: e.Role, expertIn: e.Expert_In,
-        location: e.Location,
+        location: e.Location, email: e.Email || '', status: e.Status || 'Active', leftYear: e.LeftYear || '',
         incidentsResolved: incidents.filter(i => i.ResolvedBy && i.ResolvedBy.includes(e.Team)).length
       })),
       source: 'MEMORA → Team Expertise Graph + Incident Resolution History'

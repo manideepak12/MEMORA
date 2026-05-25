@@ -103,16 +103,7 @@ html,body{height:100%;max-height:100%;overflow:hidden;font-family:var(--font);ba
 .wlc-q{font-size:12.5px;font-weight:500;color:var(--t1);line-height:1.4}
 
 /* ── MEMORA HERO WELCOME */
-.mem-hero{background:linear-gradient(135deg,#0C4A6E 0%,#075985 60%,#0369A1 100%);border-radius:var(--r12);padding:22px 24px;margin-bottom:20px;width:100%;max-width:560px;position:relative;overflow:hidden}
-.mem-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.05);border-radius:50%}
-.mem-hero::after{content:'';position:absolute;bottom:-20px;right:40px;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50%}
-.mh-tag{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7DD3FC;margin-bottom:8px}
-.mh-title{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.2px;margin-bottom:6px}
-.mh-desc{font-size:12px;color:#BAE6FD;line-height:1.55}
-.mh-stats{display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
-.mh-stat{text-align:center}
-.mh-stat-val{font-size:17px;font-weight:700;color:#fff}
-.mh-stat-lbl{font-size:10px;color:#93C5FD;margin-top:1px}
+/* MEMORA VIEW STYLES */
 
 /* ── RESPONSE CARDS */
 .rcard{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh1);animation:fadeUp .22s ease both;margin-bottom:14px}
@@ -149,14 +140,32 @@ table.dt tbody tr:hover td{background:var(--srf2)}
 .mem-txt strong{color:#0C4A6E;font-weight:600}
 
 /* Expert cards */
-.expert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-.expert-card{background:var(--srf2);border:1px solid var(--bd);border-radius:var(--r8);padding:11px 13px;transition:all .12s}
-.expert-card:hover{border-color:var(--mem-bd);box-shadow:var(--sh1)}
-.ec-name{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px}
-.ec-role{font-size:11.5px;color:var(--t3);margin-bottom:6px}
-.ec-tags{display:flex;gap:5px;flex-wrap:wrap}
-.ec-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:var(--mem-bg);color:var(--mem);border:1px solid var(--mem-bd)}
-.ec-stat{font-size:10.5px;color:var(--t4);margin-top:5px}
+.expert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.expert-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:14px 16px;transition:all .15s}
+.expert-card:hover{border-color:var(--mem-bd);box-shadow:var(--sh2);transform:translateY(-1px)}
+.expert-card.ec-left{border-left:3px solid var(--bd3);opacity:.75}
+.expert-card.ec-left:hover{border-left-color:var(--warn)}
+.ec-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.ec-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--srf);flex-shrink:0}
+.ec-av-active{background:linear-gradient(135deg,var(--mem),#0EA5E9)}
+.ec-av-left{background:var(--bd2);color:var(--t4)}
+.ec-info{flex:1}
+.ec-name{font-size:13px;font-weight:600;color:var(--t1);letter-spacing:-.1px;margin-bottom:2px}
+.ec-role{font-size:11px;color:var(--t3);line-height:1.3}
+.ec-status-badge{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap}
+.esb-active{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.esb-left{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.ec-contact{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:6px 8px;background:var(--srf2);border-radius:var(--r6);border:1px solid var(--bd)}
+.ec-contact-icon svg{width:12px;height:12px;stroke:var(--mem);fill:none;stroke-width:1.8;flex-shrink:0}
+.ec-email{font-size:11px;color:var(--mem);font-weight:500;text-decoration:none}
+.ec-email:hover{text-decoration:underline}
+.ec-no-contact{font-size:11px;color:var(--t4);font-style:italic}
+.ec-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.ec-tag{font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:var(--mem-bg);color:var(--mem);border:1px solid var(--mem-bd)}
+.ec-footer{display:flex;align-items:center;justify-content:space-between;padding-top:7px;border-top:1px solid var(--bd)}
+.ec-loc{font-size:10.5px;color:var(--t4);display:flex;align-items:center;gap:4px}
+.ec-loc svg{width:10px;height:10px;stroke:var(--t4);fill:none;stroke-width:1.8;flex-shrink:0}
+.ec-inc{font-size:10.5px;color:var(--t4)}
 
 /* Incident timeline */
 .timeline{margin-bottom:12px;position:relative}
@@ -241,28 +250,26 @@ table.dt tbody tr:hover td{background:var(--srf2)}
 .mem-view{flex:1;height:0;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0}
 .mem-view::-webkit-scrollbar{width:5px}
 .mem-view::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
-.mem-header{background:linear-gradient(135deg,#0C4A6E 0%,#075985 70%,#0369A1 100%);padding:28px 32px;position:relative;overflow:hidden}
-.mem-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.04);border-radius:50%}
-.mem-header::after{content:'';position:absolute;bottom:-30px;left:30%;width:100px;height:100px;background:rgba(255,255,255,.03);border-radius:50%}
-.mh-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);margin-bottom:10px}
-.mh-badge-dot{width:6px;height:6px;border-radius:50%;background:#38BDF8;animation:pulse 2s infinite}
-.mh-badge-txt{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#BAE6FD}
-.mem-header h2{font-size:20px;font-weight:700;color:#fff;letter-spacing:-.4px;margin-bottom:6px}
-.mem-header p{font-size:13px;color:#BAE6FD;line-height:1.55;max-width:520px;margin-bottom:16px}
-.mh-stats-row{display:flex;gap:20px}
+.mem-header{background:var(--srf);border-bottom:1px solid var(--bd);padding:24px 32px}
+.mh-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:var(--mem-bg);border:1px solid var(--mem-bd);margin-bottom:10px}
+.mh-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--mem-acc);animation:pulse 2s infinite}
+.mh-badge-txt{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mem)}
+.mem-header h2{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;margin-bottom:6px}
+.mem-header p{font-size:13px;color:var(--t3);line-height:1.55;max-width:560px;margin-bottom:20px}
+.mh-stats-row{display:flex;gap:12px}
 .mh-stat-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--r8);padding:10px 14px;min-width:90px}
 .mh-stat-val{font-size:20px;font-weight:700;color:#fff}
 .mh-stat-lbl{font-size:10px;color:#93C5FD;margin-top:2px}
-.mem-body{padding:24px 28px}
-.mem-section-title{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mem);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.mem-section-title::after{content:'';flex:1;height:1px;background:var(--mem-bd)}
-.mem-q-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:24px}
+.mem-body{padding:20px 28px}
+.mem-section-title{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t4);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.mem-section-title::after{content:'';flex:1;height:1px;background:var(--bd)}
+.mem-q-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
 .mem-q-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r8);padding:12px 14px;cursor:pointer;transition:all .12s}
 .mem-q-card:hover{border-color:var(--mem-bd);background:var(--mem-bg);transform:translateY(-1px);box-shadow:var(--sh1)}
 .mqc-tag{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mem);margin-bottom:5px}
 .mqc-q{font-size:12.5px;color:var(--t1);font-weight:500;line-height:1.4}
-.mem-cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.mem-cap{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r8);padding:13px 14px}
+.mem-cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.mem-cap{background:var(--srf2);border:1px solid var(--bd);border-radius:var(--r8);padding:12px 14px}
 .mc-icon{width:28px;height:28px;background:var(--mem-bg);border-radius:var(--r6);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
 .mc-icon svg{stroke:var(--mem);fill:none;stroke-width:1.7;width:14px;height:14px}
 .mc-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
@@ -634,13 +641,32 @@ function renderCard(data,container){
 // ── Expert cards renderer ───────────────────────────────────
 function expertCards(experts){
   if(!experts||!experts.length)return'';
-  return`<div class="expert-grid">${experts.map(e=>`
-    <div class="expert-card">
-      <div class="ec-name">${esc(e.name)}</div>
-      <div class="ec-role">${esc(e.role)} · ${esc(e.team)}</div>
-      <div class="ec-tags"><span class="ec-tag">${esc(e.expertIn)}</span></div>
-      <div class="ec-stat">${e.incidentsResolved} incidents resolved · ${esc(e.location)}</div>
-    </div>`).join('')}</div>`;
+  return`<div class="expert-grid">${experts.map(e=>{
+    const isLeft=e.status==='Left';
+    const initials=e.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    const tags=e.expertIn?e.expertIn.split(',').slice(0,3):[];
+    const contactHtml=isLeft
+      ?`<div class="ec-contact"><span class="ec-no-contact">Left organisation in ${e.leftYear||'N/A'}</span></div>`
+      :e.email
+        ?`<div class="ec-contact"><div class="ec-contact-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="8" rx="1"/><path d="M1 4l6 4 6-4"/></svg></div><a class="ec-email" href="mailto:${esc(e.email)}">${esc(e.email)}</a></div>`
+        :`<div class="ec-contact"><span class="ec-no-contact">No email on record</span></div>`;
+    return`<div class="expert-card${isLeft?' ec-left':''}">
+      <div class="ec-top">
+        <div class="ec-avatar ${isLeft?'ec-av-left':'ec-av-active'}">${initials}</div>
+        <div class="ec-info">
+          <div class="ec-name">${esc(e.name)}</div>
+          <div class="ec-role">${esc(e.role)}</div>
+        </div>
+        <span class="ec-status-badge ${isLeft?'esb-left':'esb-active'}">${isLeft?'Left':'Active'}</span>
+      </div>
+      ${contactHtml}
+      <div class="ec-tags">${tags.map(t=>`<span class="ec-tag">${esc(t.trim())}</span>`).join('')}</div>
+      <div class="ec-footer">
+        <div class="ec-loc"><svg viewBox="0 0 12 12"><path d="M6 1a3 3 0 010 6C4 7 2 5 2 3a4 4 0 018 0z"/><circle cx="6" cy="3" r="1"/></svg>${esc(e.location)}</div>
+        <div class="ec-inc">${e.incidentsResolved} incident${e.incidentsResolved!==1?'s':''} resolved</div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 // ── Timeline renderer ───────────────────────────────────────
