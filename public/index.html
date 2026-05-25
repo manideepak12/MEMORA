@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Algonox — MEMORA × IRIS Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --iris:#4F46E5;--iris-h:#4338CA;--iris-bg:#EEF2FF;--iris-bd:#C7D2FE;
+  --mem:#0369A1;--mem-h:#075985;--mem-bg:#E0F2FE;--mem-bd:#7DD3FC;--mem-acc:#0EA5E9;
+  --comb:#059669;--comb-bg:#ECFDF5;--comb-bd:#A7F3D0;
+  --danger:#DC2626;--warn:#D97706;--ok:#16A34A;
+  --bg:#F0F4F8;--srf:#FFFFFF;--srf2:#F8FAFC;--srf3:#F1F5F9;
+  --bd:#E2E8F0;--bd2:#CBD5E1;--bd3:#94A3B8;
+  --t1:#0F172A;--t2:#334155;--t3:#64748B;--t4:#94A3B8;
+  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --r4:4px;--r6:6px;--r8:8px;--r12:12px;--r16:16px;--r20:20px;
+  --sh1:0 1px 3px rgba(15,23,42,.07),0 1px 2px rgba(15,23,42,.04);
+  --sh2:0 4px 16px rgba(15,23,42,.09),0 2px 6px rgba(15,23,42,.04);
+  --focus:0 0 0 3px rgba(3,105,161,.2);
+}
+html,body{height:100%;max-height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── TOPBAR */
+.topbar{height:54px;background:var(--srf);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 20px;gap:0;flex-shrink:0;z-index:100;position:relative}
+.tb-brand{display:flex;align-items:center;gap:10px;margin-right:24px;text-decoration:none}
+.tb-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--mem),var(--iris));border-radius:var(--r8);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tb-logo svg{stroke:#fff;fill:none;stroke-width:1.7;width:16px;height:16px}
+.tb-name{font-size:14.5px;font-weight:600;color:var(--t1);letter-spacing:-.3px;white-space:nowrap}
+.tb-name em{font-style:normal;color:var(--mem)}
+.tb-sep{width:1px;height:20px;background:var(--bd);margin-right:16px}
+.tb-nav{display:flex;align-items:center;gap:2px;flex:1}
+.nav-btn{padding:5px 12px;border-radius:var(--r6);font-size:13px;font-weight:500;color:var(--t3);cursor:pointer;transition:all .12s;white-space:nowrap;border:none;background:transparent;display:flex;align-items:center;gap:6px}
+.nav-btn:hover{background:var(--srf3);color:var(--t1)}
+.nav-btn.active.nb-mem{background:var(--mem-bg);color:var(--mem);font-weight:600}
+.nav-btn.active.nb-iris{background:var(--iris-bg);color:var(--iris);font-weight:600}
+.nav-btn.active.nb-dash{background:var(--srf3);color:var(--t1);font-weight:600}
+.nb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nb-dot-mem{background:var(--mem-acc)} .nb-dot-iris{background:var(--iris)} .nb-dot-dash{background:var(--t4)}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.live-badge{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px;background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#16A34A;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.tb-avatar{width:30px;height:30px;border-radius:50%;background:var(--iris-bg);border:1.5px solid var(--iris-bd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--iris);cursor:pointer;flex-shrink:0}
+
+/* ── LAYOUT */
+.layout{display:flex;height:calc(100vh - 54px);overflow:hidden}
+
+/* ── SIDEBAR */
+.sidebar{width:242px;background:var(--srf);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;height:100%}
+.sb-section{padding:12px 10px 4px;flex-shrink:0}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--t4);padding:0 6px;margin-bottom:4px}
+.sb-scroll{flex:1;min-height:0;overflow-y:auto;padding:4px 10px 8px}
+.sb-scroll::-webkit-scrollbar{width:3px}
+.sb-scroll::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.q-item{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:var(--r8);cursor:pointer;transition:all .12s;border:1px solid transparent;margin-bottom:1px}
+.q-item:hover{background:var(--srf2);border-color:var(--bd)}
+.q-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.qi-mem{background:var(--mem-bg)} .qi-iris{background:var(--iris-bg)} .qi-comb{background:var(--comb-bg)}
+.q-icon svg{width:10px;height:10px;stroke-width:2;fill:none}
+.qi-mem svg{stroke:var(--mem)} .qi-iris svg{stroke:var(--iris)} .qi-comb svg{stroke:var(--comb)}
+.q-text{font-size:11.5px;color:var(--t3);line-height:1.4}
+.q-item:hover .q-text{color:var(--t1)}
+.sb-divider{height:1px;background:var(--bd);margin:4px 10px}
+.legend-wrap{padding:8px 10px 12px;flex-shrink:0}
+.leg-row{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:var(--r6);margin-bottom:1px}
+.leg-chip{font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 6px;border-radius:3px;flex-shrink:0}
+.lc-mem{background:var(--mem-bg);color:var(--mem)} .lc-iris{background:var(--iris-bg);color:var(--iris)} .lc-comb{background:var(--comb-bg);color:var(--comb)}
+.leg-txt{font-size:11px;color:var(--t3);line-height:1.3}
+
+/* ── MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;min-width:0}
+
+/* ── VIEWS */
+.view{display:none;flex:1;flex-direction:column;min-height:0;min-width:0;height:0}
+.view.active{display:flex;overflow:hidden}
+
+/* ── CHAT FEED */
+.chat-feed{flex:1;height:0;min-height:0;overflow-y:auto;overflow-x:hidden;padding:24px 28px}
+.chat-feed::-webkit-scrollbar{width:5px}
+.chat-feed::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+/* ── WELCOME SCREENS */
+.welcome{display:flex;flex-direction:column;align-items:center;padding:40px 32px 36px;animation:fadeUp .45s ease both}
+.wlc-mem-icon{width:52px;height:52px;background:linear-gradient(135deg,#0284C7,#0EA5E9);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 4px 16px rgba(3,105,161,.25)}
+.wlc-mem-icon svg{stroke:#fff;fill:none;stroke-width:1.6;width:26px;height:26px}
+.welcome h2{font-size:19px;font-weight:600;letter-spacing:-.4px;margin-bottom:6px;color:var(--t1)}
+.welcome p{font-size:13px;color:var(--t3);line-height:1.65;text-align:center;max-width:500px;margin-bottom:22px}
+.wlc-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.wlc-pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.wp-mem{background:var(--mem-bg);color:var(--mem);border-color:var(--mem-bd)}
+.wp-iris{background:var(--iris-bg);color:var(--iris);border-color:var(--iris-bd)}
+.wlc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:560px}
+.wlc-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:12px 14px;cursor:pointer;transition:all .15s;text-align:left}
+.wlc-card:hover{box-shadow:var(--sh2);transform:translateY(-1px)}
+.wlc-card.wm:hover{border-color:var(--mem-bd);background:var(--mem-bg)}
+.wlc-card.wi:hover{border-color:var(--iris-bd);background:var(--iris-bg)}
+.wlc-label{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+.wm .wlc-label{color:var(--mem)} .wi .wlc-label{color:var(--iris)}
+.wlc-q{font-size:12.5px;font-weight:500;color:var(--t1);line-height:1.4}
+
+/* ── MEMORA HERO WELCOME */
+.mem-hero{background:linear-gradient(135deg,#0C4A6E 0%,#075985 60%,#0369A1 100%);border-radius:var(--r12);padding:22px 24px;margin-bottom:20px;width:100%;max-width:560px;position:relative;overflow:hidden}
+.mem-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.05);border-radius:50%}
+.mem-hero::after{content:'';position:absolute;bottom:-20px;right:40px;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50%}
+.mh-tag{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7DD3FC;margin-bottom:8px}
+.mh-title{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.2px;margin-bottom:6px}
+.mh-desc{font-size:12px;color:#BAE6FD;line-height:1.55}
+.mh-stats{display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.mh-stat{text-align:center}
+.mh-stat-val{font-size:17px;font-weight:700;color:#fff}
+.mh-stat-lbl{font-size:10px;color:#93C5FD;margin-top:1px}
+
+/* ── RESPONSE CARDS */
+.rcard{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh1);animation:fadeUp .22s ease both;margin-bottom:14px}
+.rc-head{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--bd);background:var(--srf)}
+.eng-tag{font-size:9.5px;font-weight:700;letter-spacing:.6px;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.et-mem{background:var(--mem-bg);color:var(--mem)} .et-iris{background:var(--iris-bg);color:var(--iris)}
+.et-comb{background:var(--comb-bg);color:var(--comb)} .et-help{background:var(--srf3);color:var(--t3)}
+.rc-title{font-size:13px;font-weight:600;color:var(--t1);flex:1;letter-spacing:-.15px}
+.rc-body{padding:14px 15px}
+.rc-summary{font-size:13px;line-height:1.65;color:var(--t2);margin-bottom:13px}
+.rc-summary strong{color:var(--t1);font-weight:600}
+
+/* Chart */
+.chart-wrap{border:1px solid var(--bd);border-radius:var(--r8);padding:14px 14px 10px;margin-bottom:12px;background:var(--srf2)}
+.chart-title{font-size:10.5px;font-weight:600;color:var(--t3);letter-spacing:.3px;margin-bottom:10px;text-transform:uppercase}
+.chart-canvas-wrap{position:relative;height:190px}
+.chart-canvas-wrap canvas{max-height:190px}
+
+/* Table */
+.tbl-wrap{border:1px solid var(--bd);border-radius:var(--r8);overflow:hidden;margin-bottom:12px;overflow-x:auto}
+table.dt{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
+table.dt thead tr{background:var(--srf3)}
+table.dt th{text-align:left;padding:7px 10px;font-size:10px;font-weight:600;color:var(--t4);letter-spacing:.4px;text-transform:uppercase;border-bottom:1px solid var(--bd);white-space:nowrap}
+table.dt td{padding:8px 10px;color:var(--t2);border-bottom:1px solid rgba(226,232,240,.5);font-size:11.5px}
+table.dt tbody tr:last-child td{border-bottom:none}
+table.dt tbody tr:hover td{background:var(--srf2)}
+
+/* MEMORA insight box */
+.mem-box{display:flex;gap:9px;background:linear-gradient(135deg,#E0F2FE,#F0F9FF);border:1px solid var(--mem-bd);border-radius:var(--r8);padding:11px 13px;margin-top:11px}
+.mem-icon{flex-shrink:0;margin-top:2px}
+.mem-icon svg{stroke:var(--mem);fill:none;stroke-width:1.8;width:15px;height:15px}
+.mem-lbl{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mem);margin-bottom:4px}
+.mem-txt{font-size:12px;color:#075985;line-height:1.55}
+.mem-txt strong{color:#0C4A6E;font-weight:600}
+
+/* Expert cards */
+.expert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.expert-card{background:var(--srf2);border:1px solid var(--bd);border-radius:var(--r8);padding:11px 13px;transition:all .12s}
+.expert-card:hover{border-color:var(--mem-bd);box-shadow:var(--sh1)}
+.ec-name{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.ec-role{font-size:11.5px;color:var(--t3);margin-bottom:6px}
+.ec-tags{display:flex;gap:5px;flex-wrap:wrap}
+.ec-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:var(--mem-bg);color:var(--mem);border:1px solid var(--mem-bd)}
+.ec-stat{font-size:10.5px;color:var(--t4);margin-top:5px}
+
+/* Incident timeline */
+.timeline{margin-bottom:12px;position:relative}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:1.5px;background:var(--bd2)}
+.tl-item{display:flex;gap:14px;padding:0 0 12px 0;position:relative}
+.tl-dot{width:21px;height:21px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;background:var(--srf)}
+.tl-dot.crit{border-color:var(--danger);background:#FFF5F5}
+.tl-dot.high{border-color:var(--warn);background:#FFFBEB}
+.tl-dot.med{border-color:#3B82F6;background:#EFF6FF}
+.tl-dot svg{width:9px;height:9px;fill:none;stroke-width:2}
+.tl-dot.crit svg{stroke:var(--danger)} .tl-dot.high svg{stroke:var(--warn)} .tl-dot.med svg{stroke:#2563EB}
+.tl-content{flex:1;padding-top:1px}
+.tl-header{display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.tl-id{font-size:10px;font-weight:700;color:var(--t4);font-family:var(--mono)}
+.tl-date{font-size:10px;color:var(--t4)}
+.tl-sev{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:auto}
+.ts-crit{background:#FEF2F2;color:var(--danger)} .ts-high{background:#FFFBEB;color:var(--warn)} .ts-med{background:#EFF6FF;color:#1D4ED8}
+.tl-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.tl-desc{font-size:11.5px;color:var(--t3);line-height:1.4}
+.tl-by{font-size:10.5px;color:var(--t4);margin-top:3px}
+
+/* Source footer */
+.rc-src{display:flex;align-items:center;gap:5px;margin-top:11px;padding-top:10px;border-top:1px solid var(--bd);font-size:10.5px;color:var(--t4);font-family:var(--mono)}
+.rc-src svg{width:11px;height:11px;stroke:var(--t4);fill:none;stroke-width:1.5;flex-shrink:0}
+.src-val{color:var(--mem);font-weight:500}
+.src-val.iris-src{color:var(--iris)}
+
+/* Combined */
+.comb-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
+.sub-panel{border:1px solid var(--bd);border-radius:var(--r8);overflow:hidden}
+.sub-head{padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.sh-iris{background:var(--iris-bg);color:var(--iris)} .sh-mem{background:var(--mem-bg);color:var(--mem)}
+.sub-body{padding:11px 12px;font-size:12px;color:var(--t2);line-height:1.5}
+.sub-sum{margin-bottom:9px;font-size:12px;color:var(--t2);line-height:1.55}
+.sub-sum strong{color:var(--t1);font-weight:600}
+
+/* Fallback */
+.fb-list{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+.fb-item{padding:8px 11px;border-radius:var(--r8);font-size:12.5px;color:var(--t3);cursor:pointer;transition:all .12s;border:1px solid transparent;background:var(--srf3)}
+.fb-item:hover{background:var(--mem-bg);color:var(--mem);border-color:var(--mem-bd)}
+
+/* Typing */
+.typing{display:flex;align-items:center;gap:11px;background:var(--srf);border:1px solid var(--bd);border-radius:var(--r16);padding:12px 16px;box-shadow:var(--sh1);animation:fadeUp .18s ease both;margin-bottom:14px}
+.td-dots{display:flex;gap:4px;align-items:center}
+.td-dot{width:7px;height:7px;border-radius:50%;animation:tdB 1.3s infinite}
+.td-dot:nth-child(1){background:var(--mem-acc);animation-delay:0s}
+.td-dot:nth-child(2){background:var(--iris);animation-delay:.18s}
+.td-dot:nth-child(3){background:var(--comb);animation-delay:.36s}
+@keyframes tdB{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.td-lbl{font-size:12px;color:var(--t4)}
+.td-engs{display:flex;gap:5px;margin-left:auto}
+.td-eng{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:3px}
+.te-m{background:var(--mem-bg);color:var(--mem)} .te-i{background:var(--iris-bg);color:var(--iris)}
+
+/* User bubble */
+.user-turn{display:flex;justify-content:flex-end;animation:fadeUp .18s ease both;margin-bottom:14px}
+.user-bubble{background:var(--iris);color:#fff;padding:10px 15px;border-radius:18px 18px 4px 18px;font-size:13.5px;max-width:66%;line-height:1.55;letter-spacing:-.1px}
+
+/* ── INPUT BAR */
+.input-zone{background:var(--srf);border-top:1px solid var(--bd);padding:12px 28px 14px;flex-shrink:0}
+.input-row{display:flex;align-items:center;gap:9px;background:var(--srf);border:1.5px solid var(--bd2);border-radius:var(--r20);padding:9px 12px;transition:all .2s}
+.input-row:focus-within{border-color:var(--mem);box-shadow:var(--focus)}
+.input-pre{width:26px;height:26px;background:var(--mem-bg);border-radius:var(--r6);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.input-pre svg{stroke:var(--mem);fill:none;stroke-width:1.8;width:13px;height:13px}
+.input-pre.ip-iris{background:var(--iris-bg)}
+.input-pre.ip-iris svg{stroke:var(--iris)}
+#qInput,#qInputM{flex:1;border:none;outline:none;font-family:var(--font);font-size:13.5px;color:var(--t1);background:transparent;caret-color:var(--mem)}
+#qInput::placeholder,#qInputM::placeholder{color:var(--t4)}
+.send-btn-mem{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--mem);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;flex-shrink:0;letter-spacing:-.1px}
+.send-btn-mem:hover{background:var(--mem-h);box-shadow:var(--sh1)}
+.send-btn-mem:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.send-btn-mem svg{stroke:#fff;fill:none;stroke-width:2;width:13px;height:13px}
+.send-btn-iris{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--iris);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;flex-shrink:0;letter-spacing:-.1px}
+.send-btn-iris:hover{background:var(--iris-h);box-shadow:var(--sh1)}
+.send-btn-iris:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.send-btn-iris svg{stroke:#fff;fill:none;stroke-width:2;width:13px;height:13px}
+.input-meta{display:flex;justify-content:space-between;margin-top:7px;padding:0 2px;font-size:11px;color:var(--t4)}
+.meta-left{display:flex;align-items:center;gap:5px}
+.m-dot{width:5px;height:5px;border-radius:50%;background:var(--ok)}
+
+/* ── MEMORA VIEW */
+.mem-view{flex:1;height:0;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0}
+.mem-view::-webkit-scrollbar{width:5px}
+.mem-view::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+.mem-header{background:linear-gradient(135deg,#0C4A6E 0%,#075985 70%,#0369A1 100%);padding:28px 32px;position:relative;overflow:hidden}
+.mem-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.04);border-radius:50%}
+.mem-header::after{content:'';position:absolute;bottom:-30px;left:30%;width:100px;height:100px;background:rgba(255,255,255,.03);border-radius:50%}
+.mh-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);margin-bottom:10px}
+.mh-badge-dot{width:6px;height:6px;border-radius:50%;background:#38BDF8;animation:pulse 2s infinite}
+.mh-badge-txt{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#BAE6FD}
+.mem-header h2{font-size:20px;font-weight:700;color:#fff;letter-spacing:-.4px;margin-bottom:6px}
+.mem-header p{font-size:13px;color:#BAE6FD;line-height:1.55;max-width:520px;margin-bottom:16px}
+.mh-stats-row{display:flex;gap:20px}
+.mh-stat-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--r8);padding:10px 14px;min-width:90px}
+.mh-stat-val{font-size:20px;font-weight:700;color:#fff}
+.mh-stat-lbl{font-size:10px;color:#93C5FD;margin-top:2px}
+.mem-body{padding:24px 28px}
+.mem-section-title{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mem);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.mem-section-title::after{content:'';flex:1;height:1px;background:var(--mem-bd)}
+.mem-q-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:24px}
+.mem-q-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r8);padding:12px 14px;cursor:pointer;transition:all .12s}
+.mem-q-card:hover{border-color:var(--mem-bd);background:var(--mem-bg);transform:translateY(-1px);box-shadow:var(--sh1)}
+.mqc-tag{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mem);margin-bottom:5px}
+.mqc-q{font-size:12.5px;color:var(--t1);font-weight:500;line-height:1.4}
+.mem-cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mem-cap{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r8);padding:13px 14px}
+.mc-icon{width:28px;height:28px;background:var(--mem-bg);border-radius:var(--r6);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.mc-icon svg{stroke:var(--mem);fill:none;stroke-width:1.7;width:14px;height:14px}
+.mc-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.mc-desc{font-size:11px;color:var(--t3);line-height:1.45}
+
+/* ── DASHBOARD */
+.dash-view{flex:1;height:0;min-height:0;overflow-y:auto;padding:24px 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start}
+.dash-view::-webkit-scrollbar{width:5px}
+.dash-view::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+.kpi-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:16px 18px;box-shadow:var(--sh1)}
+.kpi-label{font-size:10.5px;font-weight:600;color:var(--t4);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
+.kpi-val{font-size:24px;font-weight:600;color:var(--t1);letter-spacing:-.8px;line-height:1}
+.kpi-sub{font-size:11px;color:var(--t4);margin-top:5px}
+.kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:6px}
+.kpi-up{background:#F0FDF4;color:#166534}
+.dash-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:16px 18px;box-shadow:var(--sh1)}
+.dc-full{grid-column:1/-1} .dc-2{grid-column:span 2}
+.dash-card h3{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.3px;text-transform:uppercase;margin-bottom:14px}
+.dash-chart{position:relative;height:180px}
+.dash-chart canvas{max-height:180px}
+.inc-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
+.inc-row:last-child{border-bottom:none}
+.sev-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.sev-crit{background:var(--danger)} .sev-high{background:var(--warn)} .sev-med{background:#2563EB}
+.inc-id{font-size:10px;font-weight:600;color:var(--t4);font-family:var(--mono);white-space:nowrap;flex-shrink:0;min-width:70px}
+.inc-info{flex:1}
+.inc-sys{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.inc-cause{font-size:11.5px;color:var(--t3);line-height:1.4}
+.inc-meta{font-size:10px;color:var(--t4);margin-top:3px}
+.inc-sev-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:3px}
+.is-crit{background:#FEF2F2;color:var(--danger)} .is-high{background:#FFFBEB;color:var(--warn)} .is-med{background:#EFF6FF;color:#1D4ED8}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a class="tb-brand" href="#">
+    <div class="tb-logo">
+      <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><path d="M9 5v4l2.5 2.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="tb-name">Algonox <em>MEMORA</em></div>
+  </a>
+  <div class="tb-sep"></div>
+  <nav class="tb-nav">
+    <div class="nav-btn nb-mem active" onclick="switchView('memora',this)"><div class="nb-dot nb-dot-mem"></div>MEMORA</div>
+    <div class="nav-btn nb-iris" onclick="switchView('chat',this)"><div class="nb-dot nb-dot-iris"></div>IRIS Query</div>
+    <div class="nav-btn nb-dash" onclick="switchView('dash',this)"><div class="nb-dot nb-dot-dash"></div>Analytics</div>
+  </nav>
+  <div class="tb-right">
+    <div class="live-badge"><div class="live-dot"></div>Live</div>
+    <div class="tb-avatar">AG</div>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <div class="sb-label">MEMORA Queries</div>
+  </div>
+  <div class="sb-scroll" id="qList"></div>
+  <div class="sb-divider"></div>
+  <div class="legend-wrap">
+    <div class="sb-label" style="padding:6px 6px 5px">Engine Legend</div>
+    <div class="leg-row"><span class="leg-chip lc-mem">MEMORA</span><span class="leg-txt">Organizational memory & incidents</span></div>
+    <div class="leg-row"><span class="leg-chip lc-iris">IRIS</span><span class="leg-txt">Live data from structured sources</span></div>
+    <div class="leg-row"><span class="leg-chip lc-comb">COMBINED</span><span class="leg-txt">Both engines, one response</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- MEMORA VIEW (DEFAULT HERO) -->
+  <div class="view active" id="view-memora" style="flex-direction:column">
+    <div class="mem-view" id="memoraFeed">
+      <div class="mem-header">
+        <div class="mh-badge"><div class="mh-badge-dot"></div><span class="mh-badge-txt">Enterprise Operational Memory</span></div>
+        <h2>MEMORA — Organizational Intelligence</h2>
+        <p>Ask about past incidents, root causes, expert knowledge, compliance history, and recurring failure patterns. MEMORA surfaces what your organization has learned — instantly.</p>
+        <div class="mh-stats-row" id="memoraStats">
+          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Incidents Indexed</div></div>
+          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Experts Mapped</div></div>
+          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Avg Resolution</div></div>
+          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Critical Resolved</div></div>
+        </div>
+      </div>
+      <div class="mem-body">
+        <div class="mem-section-title">Ask MEMORA</div>
+        <div class="mem-q-grid" id="memoraGrid"></div>
+        <div class="mem-section-title">MEMORA Capabilities</div>
+        <div class="mem-cap-grid">
+          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2" stroke-linecap="round"/></svg></div><div class="mc-title">Incident Memory</div><div class="mc-desc">Retrieves historical incidents, root causes, and resolutions across ACE Platform and Sweet Hello AI.</div></div>
+          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="3"/><circle cx="12" cy="10" r="2"/><path d="M9 6.5l1.5 2" stroke-linecap="round"/></svg></div><div class="mc-title">Expert Discovery</div><div class="mc-desc">Maps who resolved what. Identifies the right SME for any incident domain — instantly.</div></div>
+          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><path d="M3 12L6 7l3 3 2-4 2 5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="mc-title">Pattern Analysis</div><div class="mc-desc">Identifies recurring failure categories and systemic risks before they escalate.</div></div>
+          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/></svg></div><div class="mc-title">Compliance Memory</div><div class="mc-desc">Tracks regulatory incidents, enforced remediations, and TRAI/GDPR audit history.</div></div>
+          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><path d="M8 2v4M8 10v4M2 8h4M10 8h4" stroke-linecap="round"/></svg></div><div class="mc-title">Root Cause Intelligence</div><div class="mc-desc">Infers likely causes using dependency graphs, workflow relationships, and incident patterns.</div></div>
+          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="8" cy="12" r="2"/><path d="M4 6v2c0 2 4 4 4 4M12 6v2c0 2-4 4-4 4"/></svg></div><div class="mc-title">Knowledge Graph</div><div class="mc-desc">Connects employees, systems, incidents, vendors, and resolutions into a living graph.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="input-zone">
+      <div class="input-row">
+        <div class="input-pre"><svg viewBox="0 0 14 14"><circle cx="8" cy="8" r="5"/><path d="M8 6v2l1.5 1.5" stroke-linecap="round"/></svg></div>
+        <input id="qInputM" type="text" autocomplete="off" placeholder="Ask MEMORA — incidents, root causes, expert discovery, compliance history..."/>
+        <button class="send-btn-mem" id="sendBtnM" onclick="handleSendM()">
+          <svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Ask MEMORA
+        </button>
+      </div>
+      <div class="input-meta">
+        <div class="meta-left"><div class="m-dot"></div>MEMORA — incidents indexed · experts mapped · 2023–2025</div>
+        <div>Click any question above or type your own</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IRIS CHAT VIEW -->
+  <div class="view" id="view-chat" style="flex-direction:column">
+    <div class="chat-feed" id="chatFeed">
+      <div class="welcome" id="welcome">
+        <div class="wlc-mem-icon" style="background:linear-gradient(135deg,var(--iris),#818CF8)">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h2>IRIS — Live Data Intelligence</h2>
+        <p>Query Algonox's live structured data — pipeline, revenue, deals, prospects, and team performance. MEMORA memory also available here.</p>
+        <div class="wlc-pills">
+          <span class="wlc-pill wp-iris">Live Pipeline Data</span>
+          <span class="wlc-pill wp-iris">Revenue Analytics</span>
+          <span class="wlc-pill wp-mem">+ MEMORA Memory</span>
+        </div>
+        <div class="wlc-grid">
+          <div class="wlc-card wi" onclick="sendQ('Show revenue by product')"><div class="wlc-label">IRIS — Revenue</div><div class="wlc-q">Show revenue by product</div></div>
+          <div class="wlc-card wi" onclick="sendQ('Who is the top account executive?')"><div class="wlc-label">IRIS — Sales</div><div class="wlc-q">Who is the top account executive?</div></div>
+          <div class="wlc-card wm" onclick="sendQ('What recurring issues should we fix in the ACE Platform?')"><div class="wlc-label">MEMORA — Patterns</div><div class="wlc-q">ACE Platform recurring issues</div></div>
+          <div class="wlc-card wm" onclick="sendQ('Give me an Algonox company overview')"><div class="wlc-label">Combined — Both Engines</div><div class="wlc-q">Algonox company overview</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="input-zone">
+      <div class="input-row">
+        <div class="input-pre ip-iris"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M5 3V2M9 3V2"/></svg></div>
+        <input id="qInput" type="text" autocomplete="off" placeholder="Ask about pipeline, revenue, incidents, verticals, lead sources, team experts..."/>
+        <button class="send-btn-iris" id="sendBtn" onclick="handleSend()">
+          <svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Run Query
+        </button>
+      </div>
+      <div class="input-meta">
+        <div class="meta-left"><div class="m-dot"></div>algonox_data.xlsx — 5 sources active · IRIS + MEMORA</div>
+        <div>Algonox Intelligence Platform v2.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS DASHBOARD -->
+  <div class="view" id="view-dash">
+    <div class="dash-view" id="dashContent">
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="dash-card dc-2"><h3>Quarterly Revenue Trend</h3><div class="dash-chart"><canvas id="revChart"></canvas></div></div>
+      <div class="dash-card"><h3>Revenue by Vertical</h3><div class="dash-chart"><canvas id="vertChart"></canvas></div></div>
+      <div class="dash-card"><h3>Product Revenue Split</h3><div class="dash-chart"><canvas id="prodChart"></canvas></div></div>
+      <div class="dash-card"><h3>Market Split — US vs India</h3><div class="dash-chart"><canvas id="mktChart"></canvas></div></div>
+      <div class="dash-card"><h3>Win / Loss by AE</h3><div class="dash-chart"><canvas id="wlChart"></canvas></div></div>
+      <div class="dash-card dc-full"><h3>MEMORA — Recent Incident Log</h3><div id="incList"></div></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+const API='http://localhost:3000';
+let dashLoaded=false;
+
+// ── Sidebar queries (MEMORA first) ─────────────────────────
+const SIDEBAR=[
+  {t:'ACE Platform incident history',e:'mem'},
+  {t:'Sweet Hello AI voice call incidents',e:'mem'},
+  {t:'Show critical severity incidents',e:'mem'},
+  {t:'Who handles voice call quality issues?',e:'mem'},
+  {t:'Recurring incident patterns & RCA',e:'mem'},
+  {t:'Compliance & TRAI incident history',e:'mem'},
+  {t:'Who resolves NLP and AI/ML issues?',e:'mem'},
+  {t:'Show the full incident log',e:'mem'},
+  {t:'What is MEMORA and how does it work?',e:'mem'},
+  {t:'Show revenue by product',e:'iris'},
+  {t:'Who is the top account executive?',e:'iris'},
+  {t:'Show quarterly revenue trend',e:'iris'},
+  {t:'Revenue by vertical / industry',e:'iris'},
+  {t:'Show pipeline win rate and funnel',e:'iris'},
+  {t:'Give me an Algonox company overview',e:'comb'},
+];
+const ICONS={
+  mem:`<svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1.5"/></svg>`,
+  iris:`<svg viewBox="0 0 12 12"><rect x="1.5" y="4" width="9" height="7" rx="1"/><path d="M4 4V3a2 2 0 014 0v1"/></svg>`,
+  comb:`<svg viewBox="0 0 12 12"><path d="M6 1L10.5 3.5V8.5L6 11L1.5 8.5V3.5L6 1Z"/></svg>`
+};
+(function buildSidebar(){
+  const list=document.getElementById('qList');
+  SIDEBAR.forEach(q=>{
+    const el=document.createElement('div');
+    el.className='q-item';
+    el.innerHTML=`<div class="q-icon qi-${q.e}">${ICONS[q.e]}</div><div class="q-text">${esc(q.t)}</div>`;
+    el.onclick=()=>{
+      if(q.e==='iris'||q.e==='comb'){switchView('chat',document.querySelectorAll('.nav-btn')[1]);}
+      else{switchView('memora',document.querySelectorAll('.nav-btn')[0]);}
+      sendQ(q.t,q.e);
+    };
+    list.appendChild(el);
+  });
+})();
+
+// ── Load MEMORA stats from server ───────────────────────────
+fetch(API+'/api/data').then(r=>r.json()).then(d=>{
+  const {incidents,team}=d;
+  const avgRes=(incidents.reduce((s,i)=>s+i.ResolutionTime_hrs,0)/incidents.length).toFixed(1);
+  const crit=incidents.filter(i=>i.Severity==='Critical').length;
+  const statsEl=document.getElementById('memoraStats');
+  if(statsEl){
+    statsEl.innerHTML=`
+      <div class="mh-stat-box"><div class="mh-stat-val">${incidents.length}</div><div class="mh-stat-lbl">Incidents Indexed</div></div>
+      <div class="mh-stat-box"><div class="mh-stat-val">${team.length}</div><div class="mh-stat-lbl">Experts Mapped</div></div>
+      <div class="mh-stat-box"><div class="mh-stat-val">${avgRes}h</div><div class="mh-stat-lbl">Avg Resolution</div></div>
+      <div class="mh-stat-box"><div class="mh-stat-val">${crit}</div><div class="mh-stat-lbl">Critical Resolved</div></div>`;
+  }
+}).catch(()=>{});
+
+// ── Load MEMORA question grid ───────────────────────────────
+fetch(API+'/api/memora-questions').then(r=>r.json()).then(items=>{
+  const grid=document.getElementById('memoraGrid');
+  items.forEach(item=>{
+    const el=document.createElement('div');
+    el.className='mem-q-card';
+    el.innerHTML=`<div class="mqc-tag">${esc(item.tag)}</div><div class="mqc-q">${esc(item.q)}</div>`;
+    el.onclick=()=>{sendQ(item.q,'mem')};
+    grid.appendChild(el);
+  });
+}).catch(()=>{});
+
+// ── View switching ──────────────────────────────────────────
+function switchView(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='dash'&&!dashLoaded){loadDashboard();dashLoaded=true}
+}
+
+// ── Input handlers ──────────────────────────────────────────
+document.getElementById('qInput').addEventListener('keydown',e=>{if(e.key==='Enter')handleSend()});
+document.getElementById('qInputM').addEventListener('keydown',e=>{if(e.key==='Enter')handleSendM()});
+function handleSend(){const v=document.getElementById('qInput').value.trim();if(!v)return;document.getElementById('qInput').value='';sendQ(v,'iris')}
+function handleSendM(){const v=document.getElementById('qInputM').value.trim();if(!v)return;document.getElementById('qInputM').value='';sendQ(v,'mem')}
+
+// ── Active feed selector ────────────────────────────────────
+function getActiveFeed(){
+  if(document.getElementById('view-memora').classList.contains('active'))return document.getElementById('memoraFeed');
+  return document.getElementById('chatFeed');
+}
+function getActiveBtn(engine){
+  if(engine==='mem')return document.getElementById('sendBtnM');
+  return document.getElementById('sendBtn');
+}
+
+// ── Main sendQ ──────────────────────────────────────────────
+async function sendQ(question,engine='mem'){
+  // Switch to correct view
+  if(engine==='mem'||engine==='memora'){
+    if(!document.getElementById('view-memora').classList.contains('active'))
+      switchView('memora',document.querySelectorAll('.nav-btn')[0]);
+  } else {
+    if(!document.getElementById('view-chat').classList.contains('active'))
+      switchView('chat',document.querySelectorAll('.nav-btn')[1]);
+  }
+  document.getElementById('welcome')?.remove();
+  const feed=getActiveFeed();
+  const btn=getActiveBtn(engine);
+  if(btn)btn.disabled=true;
+  // User bubble
+  const ub=document.createElement('div');ub.className='user-turn';
+  ub.innerHTML=`<div class="user-bubble">${esc(question)}</div>`;
+  feed.appendChild(ub);
+  // Typing indicator
+  const tp=document.createElement('div');tp.className='typing';
+  tp.innerHTML=`<div class="td-dots"><div class="td-dot"></div><div class="td-dot"></div><div class="td-dot"></div></div><span class="td-lbl">Querying ${engine==='mem'?'MEMORA knowledge base':'IRIS data sources'}...</span><div class="td-engs"><span class="td-eng te-m">MEMORA</span><span class="td-eng te-i">IRIS</span></div>`;
+  feed.appendChild(tp);scroll2end(feed);
+  try{
+    const res=await fetch(API+'/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});
+    const data=await res.json();
+    tp.remove();renderCard(data,feed);
+  }catch(e){
+    tp.remove();
+    const err=document.createElement('div');err.className='rcard';
+    err.innerHTML=`<div class="rc-head"><span class="eng-tag et-help">ERROR</span><span class="rc-title">Server unavailable</span></div><div class="rc-body"><div class="rc-summary">Cannot connect to Node.js server on port 3000. Run <strong>node server.js</strong> in the project directory.</div></div>`;
+    feed.appendChild(err);
+  }
+  if(btn)btn.disabled=false;scroll2end(feed);
+}
+
+// ── Render card ─────────────────────────────────────────────
+let chartCount=0;
+function renderCard(data,container){
+  const card=document.createElement('div');card.className='rcard';
+  if(data.type==='memora'){
+    const hasTimeline=data.timeline&&data.timeline.length>0;
+    const hasExperts=data.expertCards&&data.expertCards.length>0;
+    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-mem">MEMORA</span><span class="rc-title">${esc(data.title)}</span></div>
+    <div class="rc-body">
+      <div class="rc-summary">${fmt(data.summary)}</div>
+      ${hasExperts?expertCards(data.expertCards):tbl(data.table)}
+      ${hasTimeline&&!hasExperts?timeline(data.timeline):''}
+      ${data.memory?`<div class="mem-box"><div class="mem-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2" stroke-linecap="round"/></svg></div><div><div class="mem-lbl">MEMORA Insight</div><div class="mem-txt">${esc(data.memory)}</div></div></div>`:''}
+      <div class="rc-src"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1.5"/></svg>Source: <span class="src-val">${esc(data.source)}</span></div>
+    </div>`;
+    container.appendChild(card);
+  }else if(data.type==='iris'){
+    const cid='c'+chartCount++;
+    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-iris">IRIS</span><span class="rc-title">${esc(data.title)}</span></div>
+    <div class="rc-body">
+      <div class="rc-summary">${fmt(data.summary)}</div>
+      ${data.chart?`<div class="chart-wrap"><div class="chart-title">${esc(data.chart.label)}</div><div class="chart-canvas-wrap"><canvas id="${cid}"></canvas></div></div>`:''}
+      ${tbl(data.table)}
+      <div class="rc-src"><svg viewBox="0 0 12 12"><rect x="1" y="2" width="10" height="8" rx="1"/></svg>Source: <span class="src-val iris-src">${esc(data.source)}</span></div>
+    </div>`;
+    container.appendChild(card);
+    if(data.chart)setTimeout(()=>drawChart(cid,data.chart),50);
+  }else if(data.type==='combined'){
+    const cid='c'+chartCount++;
+    const hasChart=data.iris&&data.iris.chart;
+    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-comb">MEMORA + IRIS</span><span class="rc-title">${esc(data.title)}</span></div>
+    <div class="rc-body">
+      <div class="comb-cols">
+        <div class="sub-panel">
+          <div class="sub-head sh-iris">IRIS — ${esc(data.iris.label)}</div>
+          <div class="sub-body">
+            <div class="sub-sum">${fmt(data.iris.summary)}</div>
+            ${hasChart?`<div class="chart-wrap" style="margin-bottom:8px"><div class="chart-title">${esc(data.iris.chart.label)}</div><div class="chart-canvas-wrap"><canvas id="${cid}"></canvas></div></div>`:''}
+            ${tbl(data.iris.table)}
+          </div>
+        </div>
+        <div class="sub-panel">
+          <div class="sub-head sh-mem">MEMORA — ${esc(data.memora.label)}</div>
+          <div class="sub-body">
+            <div class="sub-sum">${fmt(data.memora.summary)}</div>
+            ${tbl(data.memora.table)}
+          </div>
+        </div>
+      </div>
+      <div class="rc-src"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg>Source: <span class="src-val">${esc(data.source)}</span></div>
+    </div>`;
+    container.appendChild(card);
+    if(hasChart)setTimeout(()=>drawChart(cid,data.iris.chart),50);
+  }else{
+    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-help">HELP</span><span class="rc-title">${esc(data.title)}</span></div>
+    <div class="rc-body">
+      <div class="rc-summary">${esc(data.summary)}</div>
+      <div class="fb-list">${data.suggestions.map(s=>`<div class="fb-item" onclick="sendQ('${s.replace(/'/g,"\\'")}','mem')">${esc(s)}</div>`).join('')}</div>
+    </div>`;
+    container.appendChild(card);
+  }
+}
+
+// ── Expert cards renderer ───────────────────────────────────
+function expertCards(experts){
+  if(!experts||!experts.length)return'';
+  return`<div class="expert-grid">${experts.map(e=>`
+    <div class="expert-card">
+      <div class="ec-name">${esc(e.name)}</div>
+      <div class="ec-role">${esc(e.role)} · ${esc(e.team)}</div>
+      <div class="ec-tags"><span class="ec-tag">${esc(e.expertIn)}</span></div>
+      <div class="ec-stat">${e.incidentsResolved} incidents resolved · ${esc(e.location)}</div>
+    </div>`).join('')}</div>`;
+}
+
+// ── Timeline renderer ───────────────────────────────────────
+function timeline(items){
+  if(!items||!items.length)return'';
+  const sevCls=s=>s==='Critical'?'crit':s==='High'?'high':'med';
+  const tagCls=s=>s==='Critical'?'ts-crit':s==='High'?'ts-high':'ts-med';
+  return`<div class="timeline">${items.slice(0,6).map(i=>`
+    <div class="tl-item">
+      <div class="tl-dot ${sevCls(i.severity)}"><svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="3"/></svg></div>
+      <div class="tl-content">
+        <div class="tl-header">
+          <span class="tl-id">${esc(i.id)}</span>
+          <span class="tl-date">${esc(i.date)}</span>
+          <span class="tl-sev ${tagCls(i.severity)}">${esc(i.severity)}</span>
+        </div>
+        <div class="tl-title">${esc(i.title)}</div>
+        <div class="tl-desc">${esc(i.desc)}</div>
+        <div class="tl-by">Resolved by ${esc(i.resolvedBy)} · ${i.hours}h</div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+// ── Chart.js renderer ───────────────────────────────────────
+const PALETTE=['#4F46E5','#0284C7','#059669','#D97706','#DC2626','#7C3AED','#0891B2'];
+function drawChart(canvasId,cfg){
+  const canvas=document.getElementById(canvasId);if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const ds=cfg.datasets;let chartDs;
+  if(cfg.type==='pie'){const colors=ds[0].colors||PALETTE;chartDs=[{data:ds[0].data,backgroundColor:colors.map(c=>c+'CC'),borderColor:colors,borderWidth:1.5,hoverOffset:4}];}
+  else if(cfg.type==='bar'&&ds.length>1){chartDs=ds.map(d=>({label:d.label,data:d.data,backgroundColor:d.color+'CC',borderColor:d.color,borderWidth:1.5,borderRadius:4}));}
+  else if(cfg.type==='line'){chartDs=ds.map(d=>({label:d.label,data:d.data,borderColor:d.color,backgroundColor:d.color+'18',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:d.color,borderWidth:2}));}
+  else{chartDs=[{label:ds[0].label,data:ds[0].data,backgroundColor:ds[0].color+'CC',borderColor:ds[0].color,borderWidth:1.5,borderRadius:4}];}
+  new Chart(ctx,{type:cfg.type==='line'?'line':cfg.type==='pie'?'pie':'bar',data:{labels:cfg.labels,datasets:chartDs},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:ds.length>1||cfg.type==='pie',position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}},tooltip:{bodyFont:{size:11},titleFont:{size:11}}},scales:cfg.type==='pie'?{}:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}}}},animation:{duration:500}}});
+}
+
+// ── Dashboard loader ────────────────────────────────────────
+async function loadDashboard(){
+  try{
+    const r=await fetch(API+'/api/data');const d=await r.json();
+    const {pipeline,revenue,incidents,team,prospects}=d;
+    const won=pipeline.filter(r=>r.Stage==='Closed Won');
+    const lost=pipeline.filter(r=>r.Stage==='Closed Lost');
+    const totalRev=revenue.reduce((s,r)=>s+r.Revenue,0);
+    const totalDeals=revenue.reduce((s,r)=>s+r.Deals,0);
+    const winRate=Math.round((won.length/pipeline.length)*100);
+    const avgRes=(incidents.reduce((s,i)=>s+i.ResolutionTime_hrs,0)/incidents.length).toFixed(1);
+    document.getElementById('kpiRow').innerHTML=`
+      <div class="kpi"><div class="kpi-label">FY2025 Revenue</div><div class="kpi-val">₹${(totalRev/100000).toFixed(0)}L</div><div class="kpi-trend kpi-up">+28% YoY</div></div>
+      <div class="kpi"><div class="kpi-label">Deals Closed</div><div class="kpi-val">${totalDeals}</div><div class="kpi-sub">ACE + Sweet Hello AI</div></div>
+      <div class="kpi"><div class="kpi-label">Pipeline Win Rate</div><div class="kpi-val">${winRate}%</div><div class="kpi-sub">${won.length} won / ${lost.length} lost</div></div>
+      <div class="kpi"><div class="kpi-label">MEMORA — Avg Resolution</div><div class="kpi-val">${avgRes}h</div><div class="kpi-sub">${incidents.length} incidents · all resolved</div></div>`;
+    const quarters=[...new Set(revenue.map(r=>r.Quarter))];
+    const aceQ=quarters.map(q=>revenue.filter(r=>r.Quarter===q&&r.Product==='ACE Platform').reduce((s,r)=>s+r.Revenue,0));
+    const shQ=quarters.map(q=>revenue.filter(r=>r.Quarter===q&&r.Product==='Sweet Hello AI').reduce((s,r)=>s+r.Revenue,0));
+    setTimeout(()=>{new Chart(document.getElementById('revChart').getContext('2d'),{type:'line',data:{labels:quarters,datasets:[{label:'ACE Platform',data:aceQ.map(v=>+(v/100000).toFixed(1)),borderColor:'#4F46E5',backgroundColor:'#4F46E518',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#4F46E5',borderWidth:2},{label:'Sweet Hello AI',data:shQ.map(v=>+(v/100000).toFixed(1)),borderColor:'#0284C7',backgroundColor:'#0284C718',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#0284C7',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}}}}}});},100);
+    const verts={};won.forEach(r=>{verts[r.Vertical]=(verts[r.Vertical]||0)+r.DealValue});
+    const vE=Object.entries(verts).sort((a,b)=>b[1]-a[1]);
+    setTimeout(()=>{new Chart(document.getElementById('vertChart').getContext('2d'),{type:'bar',data:{labels:vE.map(([v])=>v),datasets:[{data:vE.map(([,v])=>+(v/100000).toFixed(1)),backgroundColor:PALETTE.map(c=>c+'CC'),borderColor:PALETTE,borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}}}}}});},120);
+    const prods={};revenue.forEach(r=>{prods[r.Product]=(prods[r.Product]||0)+r.Revenue});
+    const pE=Object.entries(prods);
+    setTimeout(()=>{new Chart(document.getElementById('prodChart').getContext('2d'),{type:'pie',data:{labels:pE.map(([p])=>p),datasets:[{data:pE.map(([,v])=>+(v/100000).toFixed(1)),backgroundColor:['#4F46E5CC','#0284C7CC'],borderColor:['#4F46E5','#0284C7'],borderWidth:1.5,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}}}});},140);
+    const mkts={};won.forEach(r=>{mkts[r.Region]=(mkts[r.Region]||0)+r.DealValue});
+    const mE=Object.entries(mkts);
+    setTimeout(()=>{new Chart(document.getElementById('mktChart').getContext('2d'),{type:'pie',data:{labels:mE.map(([r])=>r+' Market'),datasets:[{data:mE.map(([,v])=>+(v/100000).toFixed(1)),backgroundColor:['#4F46E5CC','#059669CC'],borderColor:['#4F46E5','#059669'],borderWidth:1.5,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}}}});},160);
+    const execs=[...new Set(pipeline.map(r=>r.AccountExec))];
+    setTimeout(()=>{new Chart(document.getElementById('wlChart').getContext('2d'),{type:'bar',data:{labels:execs.map(e=>e.split(' ')[0]),datasets:[{label:'Won',data:execs.map(e=>won.filter(r=>r.AccountExec===e).length),backgroundColor:'#05966990',borderColor:'#059669',borderWidth:1.5,borderRadius:4},{label:'Lost',data:execs.map(e=>lost.filter(r=>r.AccountExec===e).length),backgroundColor:'#DC262690',borderColor:'#DC2626',borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}}}}}});},180);
+    const incList=document.getElementById('incList');
+    const sortedInc=[...incidents].sort((a,b)=>new Date(b.Date)-new Date(a.Date)).slice(0,8);
+    incList.innerHTML=sortedInc.map(i=>{
+      const sevCls=i.Severity==='Critical'?'sev-crit':i.Severity==='High'?'sev-high':'sev-med';
+      const tagCls=i.Severity==='Critical'?'is-crit':i.Severity==='High'?'is-high':'is-med';
+      return`<div class="inc-row"><div class="sev-dot ${sevCls}"></div><div class="inc-id">${esc(i.IncidentID)}</div><div class="inc-info"><div class="inc-sys">${esc(i.System)} — ${esc(i.Category)}</div><div class="inc-cause">${esc(i.RootCause)}</div><div class="inc-meta">Resolved by ${esc(i.ResolvedBy)} · ${i.ResolutionTime_hrs}h · ${esc(i.Date)}</div></div><span class="inc-sev-tag ${tagCls}">${esc(i.Severity)}</span></div>`;
+    }).join('');
+  }catch(e){console.error('Dashboard error:',e)}
+}
+
+// ── Utils ───────────────────────────────────────────────────
+function tbl(rows){
+  if(!rows||!rows.length)return'';
+  const heads=Object.keys(rows[0]);
+  return`<div class="tbl-wrap"><table class="dt"><thead><tr>${heads.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${heads.map(h=>`<td>${esc(String(r[h]??''))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+function fmt(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function scroll2end(feed){requestAnimationFrame(()=>{requestAnimationFrame(()=>{if(feed)feed.scrollTop=feed.scrollHeight})})}
+</script>
+</body>
+</html>
