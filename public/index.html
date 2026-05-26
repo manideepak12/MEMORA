@@ -305,7 +305,10 @@ input.chat-core-input::placeholder{color:var(--t4)}
 </div>
 
 <script>
-const API_URL = 'http://localhost:3000';
+const API_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://memora-tdzu.onrender.com";
 
 const SYSTEM_LOG_SHORTCUTS = [
   { label: 'Parallel queue deadlock trace', raw: 'Agent task queue deadlock during parallel execution' },
