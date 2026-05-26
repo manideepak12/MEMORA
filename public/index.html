@@ -2,759 +2,676 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Algonox — MEMORA × IRIS Intelligence Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Algonox — MEMORA Intelligence Core</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --iris:#4F46E5;--iris-h:#4338CA;--iris-bg:#EEF2FF;--iris-bd:#C7D2FE;
-  --mem:#0369A1;--mem-h:#075985;--mem-bg:#E0F2FE;--mem-bd:#7DD3FC;--mem-acc:#0EA5E9;
-  --comb:#059669;--comb-bg:#ECFDF5;--comb-bd:#A7F3D0;
-  --danger:#DC2626;--warn:#D97706;--ok:#16A34A;
-  --bg:#F0F4F8;--srf:#FFFFFF;--srf2:#F8FAFC;--srf3:#F1F5F9;
-  --bd:#E2E8F0;--bd2:#CBD5E1;--bd3:#94A3B8;
+  --blue:#1A56A8;--blue-lt:#EBF3FF;--blue-bd:#B3D0F5;--blue-dk:#0F3870;
+  --teal:#0E7490;--teal-lt:#ECFEFF;--teal-bd:#A5F3FC;
+  --ok:#16A34A;--warn:#B45309;--danger:#B91C1C;
+  --bg:#F8FAFC;--srf:#FFFFFF;--srf2:#F1F5F9;--srf3:#E2E8F0;
+  --bd:#E2E8F0;--bd2:#CBD5E1;
   --t1:#0F172A;--t2:#334155;--t3:#64748B;--t4:#94A3B8;
-  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
-  --r4:4px;--r6:6px;--r8:8px;--r12:12px;--r16:16px;--r20:20px;
-  --sh1:0 1px 3px rgba(15,23,42,.07),0 1px 2px rgba(15,23,42,.04);
-  --sh2:0 4px 16px rgba(15,23,42,.09),0 2px 6px rgba(15,23,42,.04);
-  --focus:0 0 0 3px rgba(3,105,161,.2);
+  --font:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;
+  --r6:6px;--r8:8px;--r10:10px;--r12:12px;--sh:0 1px 2px 0 rgba(0,0,0,0.05);
 }
-html,body{height:100%;max-height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-/* ── TOPBAR */
-.topbar{height:54px;background:var(--srf);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 20px;gap:0;flex-shrink:0;z-index:100;position:relative}
-.tb-brand{display:flex;align-items:center;gap:10px;margin-right:24px;text-decoration:none}
-.tb-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--mem),var(--iris));border-radius:var(--r8);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.tb-logo svg{stroke:#fff;fill:none;stroke-width:1.7;width:16px;height:16px}
-.tb-name{font-size:14.5px;font-weight:600;color:var(--t1);letter-spacing:-.3px;white-space:nowrap}
-.tb-name em{font-style:normal;color:var(--mem)}
-.tb-sep{width:1px;height:20px;background:var(--bd);margin-right:16px}
-.tb-nav{display:flex;align-items:center;gap:2px;flex:1}
-.nav-btn{padding:5px 12px;border-radius:var(--r6);font-size:13px;font-weight:500;color:var(--t3);cursor:pointer;transition:all .12s;white-space:nowrap;border:none;background:transparent;display:flex;align-items:center;gap:6px}
-.nav-btn:hover{background:var(--srf3);color:var(--t1)}
-.nav-btn.active.nb-mem{background:var(--mem-bg);color:var(--mem);font-weight:600}
-.nav-btn.active.nb-iris{background:var(--iris-bg);color:var(--iris);font-weight:600}
-.nav-btn.active.nb-dash{background:var(--srf3);color:var(--t1);font-weight:600}
-.nb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.nb-dot-mem{background:var(--mem-acc)} .nb-dot-iris{background:var(--iris)} .nb-dot-dash{background:var(--t4)}
-.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.live-badge{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px;background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#16A34A;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.tb-avatar{width:30px;height:30px;border-radius:50%;background:var(--iris-bg);border:1.5px solid var(--iris-bd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--iris);cursor:pointer;flex-shrink:0}
+/* ─── TOPBAR ─── */
+.topbar{height:52px;background:var(--srf);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 20px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{width:28px;height:28px;background:linear-gradient(135deg, var(--blue) 0%, var(--blue-dk) 100%);border-radius:var(--r6);display:flex;align-items:center;justify-content:center}
+.brand-mark svg{stroke:#fff;fill:none;stroke-width:2;width:14px;height:14px}
+.brand-name{font-size:14px;font-weight:600;color:var(--t1);letter-spacing:-.2px}
+.brand-name span{color:var(--blue);font-weight:600}
+.engine-selector{margin-left:40px;display:flex;background:var(--srf2);padding:3px;border-radius:20px;gap:2px}
+.engine-tab{border:none;background:transparent;padding:6px 16px;font-size:12px;font-weight:600;color:var(--t3);border-radius:18px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.engine-tab.active.t-mem{background:var(--srf);color:var(--blue);box-shadow:var(--sh)}
+.engine-tab.active.t-kb{background:var(--srf);color:var(--teal);box-shadow:var(--sh)}
+.pip{width:6px;height:6px;border-radius:50%}
+.p-mem{background:var(--blue)} .p-kb{background:var(--teal)}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:12px}
+.status-node{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--ok);background:#F0FDF4;padding:4px 10px;border-radius:12px;border:1px solid #DCFCE7}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg, var(--blue-lt) 0%, #D6E4FF 100%);border:1px solid var(--blue-bd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue)}
 
-/* ── LAYOUT */
-.layout{display:flex;height:calc(100vh - 54px);overflow:hidden}
+/* ─── LAYOUT STRUCTURE ─── */
+.layout{display:flex;height:calc(100vh - 52px);overflow:hidden}
 
-/* ── SIDEBAR */
-.sidebar{width:242px;background:var(--srf);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;height:100%}
-.sb-section{padding:12px 10px 4px;flex-shrink:0}
-.sb-label{font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--t4);padding:0 6px;margin-bottom:4px}
-.sb-scroll{flex:1;min-height:0;overflow-y:auto;padding:4px 10px 8px}
-.sb-scroll::-webkit-scrollbar{width:3px}
-.sb-scroll::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
-.q-item{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:var(--r8);cursor:pointer;transition:all .12s;border:1px solid transparent;margin-bottom:1px}
-.q-item:hover{background:var(--srf2);border-color:var(--bd)}
-.q-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.qi-mem{background:var(--mem-bg)} .qi-iris{background:var(--iris-bg)} .qi-comb{background:var(--comb-bg)}
-.q-icon svg{width:10px;height:10px;stroke-width:2;fill:none}
-.qi-mem svg{stroke:var(--mem)} .qi-iris svg{stroke:var(--iris)} .qi-comb svg{stroke:var(--comb)}
-.q-text{font-size:11.5px;color:var(--t3);line-height:1.4}
-.q-item:hover .q-text{color:var(--t1)}
-.sb-divider{height:1px;background:var(--bd);margin:4px 10px}
-.legend-wrap{padding:8px 10px 12px;flex-shrink:0}
-.leg-row{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:var(--r6);margin-bottom:1px}
-.leg-chip{font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 6px;border-radius:3px;flex-shrink:0}
-.lc-mem{background:var(--mem-bg);color:var(--mem)} .lc-iris{background:var(--iris-bg);color:var(--iris)} .lc-comb{background:var(--comb-bg);color:var(--comb)}
-.leg-txt{font-size:11px;color:var(--t3);line-height:1.3}
+/* ─── SIDEBAR ─── */
+.sidebar{width:260px;background:var(--srf);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0}
+.sb-header{padding:16px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--t4)}
+.sb-list{flex:1;overflow-y:auto;padding:4px 10px 12px}
+.sb-list::-webkit-scrollbar{width:3px}
+.sb-list::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.sb-item{width:100%;background:transparent;border:none;text-align:left;padding:8px 10px;border-radius:var(--r6);cursor:pointer;display:flex;gap:8px;align-items:start;transition:all 0.1s;margin-bottom:2px}
+.sb-item:hover{background:var(--srf2)}
+.sb-dot{width:6px;height:6px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.sbd-mem{background:var(--blue)} .sbd-iris{background:var(--teal)}
+.sb-lbl{font-size:12px;color:var(--t2);font-weight:500;line-height:1.4}
+.sb-item:hover .sb-lbl{color:var(--blue)}
 
-/* ── MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;min-width:0}
+/* ─── MAIN CHAT STAGE ─── */
+.main-stage{flex:1;display:flex;flex-direction:column;background:var(--bg);position:relative;min-width:0}
+.view-panel{display:none;flex:1;flex-direction:column;min-height:0}
+.view-panel.active{display:flex}
+.chat-scroll{flex:1;overflow-y:auto;padding:24px 0}
+.chat-scroll::-webkit-scrollbar{width:4px}
+.chat-scroll::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
 
-/* ── VIEWS */
-.view{display:none;flex:1;flex-direction:column;min-height:0;min-width:0;height:0}
-.view.active{display:flex;overflow:hidden}
+/* ─── WELCOME LANDING CARDS ─── */
+.welcome-deck{max-width:640px;margin:40px auto;padding:0 24px;text-align:center}
+.welcome-deck h1{font-size:22px;font-weight:600;color:var(--t1);letter-spacing:-0.4px;margin-bottom:8px}
+.welcome-deck p{font-size:13.5px;color:var(--t3);margin-bottom:28px}
+.deck-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.deck-trigger{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:14px;text-align:left;cursor:pointer;box-shadow:var(--sh);transition:all 0.15s}
+.deck-trigger:hover{border-color:var(--blue-bd);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.03)}
+.dt-category{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--blue);margin-bottom:4px}
+.deck-trigger.iris-style .dt-category{color:var(--teal)}
+.deck-trigger.iris-style:hover{border-color:var(--teal-bd)}
+.dt-text{font-size:13px;color:var(--t2);font-weight:500;line-height:1.4}
 
-/* ── CHAT FEED */
-.chat-feed{flex:1;height:0;min-height:0;overflow-y:auto;overflow-x:hidden;padding:24px 28px}
-.chat-feed::-webkit-scrollbar{width:5px}
-.chat-feed::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+/* ─── CHAT BUBBLES ─── */
+.conversation-canvas{max-width:800px;width:100%;margin:0 auto;padding:0 24px}
+.bubble-row{display:flex;justify-content:flex-end;margin-bottom:20px;animation:slideUp 0.15s ease-out both}
+.user-bubble{background:var(--blue);color:#fff;padding:12px 18px;border-radius:18px 18px 4px 18px;font-size:13.5px;max-width:75%;line-height:1.55;box-shadow:0 2px 4px rgba(26,86,168,0.08)}
 
-/* ── WELCOME SCREENS */
-.welcome{display:flex;flex-direction:column;align-items:center;padding:40px 32px 36px;animation:fadeUp .45s ease both}
-.wlc-mem-icon{width:52px;height:52px;background:linear-gradient(135deg,#0284C7,#0EA5E9);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 4px 16px rgba(3,105,161,.25)}
-.wlc-mem-icon svg{stroke:#fff;fill:none;stroke-width:1.6;width:26px;height:26px}
-.welcome h2{font-size:19px;font-weight:600;letter-spacing:-.4px;margin-bottom:6px;color:var(--t1)}
-.welcome p{font-size:13px;color:var(--t3);line-height:1.65;text-align:center;max-width:500px;margin-bottom:22px}
-.wlc-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
-.wlc-pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
-.wp-mem{background:var(--mem-bg);color:var(--mem);border-color:var(--mem-bd)}
-.wp-iris{background:var(--iris-bg);color:var(--iris);border-color:var(--iris-bd)}
-.wlc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:560px}
-.wlc-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:12px 14px;cursor:pointer;transition:all .15s;text-align:left}
-.wlc-card:hover{box-shadow:var(--sh2);transform:translateY(-1px)}
-.wlc-card.wm:hover{border-color:var(--mem-bd);background:var(--mem-bg)}
-.wlc-card.wi:hover{border-color:var(--iris-bd);background:var(--iris-bg)}
-.wlc-label{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
-.wm .wlc-label{color:var(--mem)} .wi .wlc-label{color:var(--iris)}
-.wlc-q{font-size:12.5px;font-weight:500;color:var(--t1);line-height:1.4}
-
-/* ── MEMORA HERO WELCOME */
-/* MEMORA VIEW STYLES */
-
-/* ── RESPONSE CARDS */
-.rcard{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh1);animation:fadeUp .22s ease both;margin-bottom:14px}
-.rc-head{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--bd);background:var(--srf)}
-.eng-tag{font-size:9.5px;font-weight:700;letter-spacing:.6px;padding:3px 8px;border-radius:4px;flex-shrink:0}
-.et-mem{background:var(--mem-bg);color:var(--mem)} .et-iris{background:var(--iris-bg);color:var(--iris)}
-.et-comb{background:var(--comb-bg);color:var(--comb)} .et-help{background:var(--srf3);color:var(--t3)}
-.rc-title{font-size:13px;font-weight:600;color:var(--t1);flex:1;letter-spacing:-.15px}
-.rc-body{padding:14px 15px}
-.rc-summary{font-size:13px;line-height:1.65;color:var(--t2);margin-bottom:13px}
+/* ─── RESPONSIVE RESPONSE CARD STRUCTS ─── */
+.response-container{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);box-shadow:var(--sh);margin-bottom:20px;animation:slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;overflow:hidden}
+.rc-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--bd);background:var(--srf2)}
+.engine-badge{font-size:10px;font-weight:700;letter-spacing:0.5px;padding:3px 8px;border-radius:4px;text-transform:uppercase}
+.eb-memora{background:var(--blue-lt);color:var(--blue)}
+.eb-iris{background:var(--teal-lt);color:var(--teal)}
+.eb-hybrid{background:#ECFDF5;color:#065F46}
+.eb-error{background:#FEF2F2;color:var(--danger)}
+.rc-title{font-size:13px;font-weight:600;color:var(--t1)}
+.rc-body{padding:18px 20px}
+.rc-summary{font-size:13.5px;color:var(--t2);line-height:1.6;margin-bottom:14px}
 .rc-summary strong{color:var(--t1);font-weight:600}
 
-/* Chart */
-.chart-wrap{border:1px solid var(--bd);border-radius:var(--r8);padding:14px 14px 10px;margin-bottom:12px;background:var(--srf2)}
-.chart-title{font-size:10.5px;font-weight:600;color:var(--t3);letter-spacing:.3px;margin-bottom:10px;text-transform:uppercase}
-.chart-canvas-wrap{position:relative;height:190px}
-.chart-canvas-wrap canvas{max-height:190px}
+/* ─── DATA TABLES ─── */
+.table-viewport{border:1px solid var(--bd);border-radius:var(--r8);overflow:hidden;overflow-x:auto;margin-bottom:14px;background:#fff}
+table.data-grid{width:100%;border-collapse:collapse;font-size:12px;min-width:450px}
+table.data-grid thead{background:var(--srf2)}
+table.data-grid th{text-align:left;padding:10px 14px;font-size:10px;font-weight:600;color:var(--t3);letter-spacing:0.3px;text-transform:uppercase;border-bottom:1px solid var(--bd);white-space:nowrap}
+table.data-grid td{padding:10px 14px;color:var(--t2);border-bottom:1px solid var(--bd)}
+table.data-grid tbody tr:last-child td{border-bottom:none}
+table.data-grid tbody tr:hover td{background:var(--srf2)}
 
-/* Table */
-.tbl-wrap{border:1px solid var(--bd);border-radius:var(--r8);overflow:hidden;margin-bottom:12px;overflow-x:auto}
-table.dt{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
-table.dt thead tr{background:var(--srf3)}
-table.dt th{text-align:left;padding:7px 10px;font-size:10px;font-weight:600;color:var(--t4);letter-spacing:.4px;text-transform:uppercase;border-bottom:1px solid var(--bd);white-space:nowrap}
-table.dt td{padding:8px 10px;color:var(--t2);border-bottom:1px solid rgba(226,232,240,.5);font-size:11.5px}
-table.dt tbody tr:last-child td{border-bottom:none}
-table.dt tbody tr:hover td{background:var(--srf2)}
+/* ─── CHARTS ─── */
+.chart-viewbox{border:1px solid var(--bd);border-radius:var(--r8);padding:16px;margin-bottom:14px;background:var(--srf)}
+.chart-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:var(--t4);margin-bottom:12px}
+.chart-area-frame{position:relative;height:190px}
 
-/* MEMORA insight box */
-.mem-box{display:flex;gap:9px;background:linear-gradient(135deg,#E0F2FE,#F0F9FF);border:1px solid var(--mem-bd);border-radius:var(--r8);padding:11px 13px;margin-top:11px}
-.mem-icon{flex-shrink:0;margin-top:2px}
-.mem-icon svg{stroke:var(--mem);fill:none;stroke-width:1.8;width:15px;height:15px}
-.mem-lbl{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mem);margin-bottom:4px}
-.mem-txt{font-size:12px;color:#075985;line-height:1.55}
-.mem-txt strong{color:#0C4A6E;font-weight:600}
+/* ─── INSIGHT CALLOUTS ─── */
+.insight-callout{background:var(--blue-lt);border:1px solid var(--blue-bd);border-radius:var(--r8);padding:14px;margin-top:14px;display:flex;gap:12px}
+.ic-icon{flex-shrink:0;margin-top:2px}
+.ic-icon svg{stroke:var(--blue);fill:none;stroke-width:2;width:14px;height:14px}
+.ic-label{font-size:10px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.ic-text{font-size:12px;color:var(--blue-dk);line-height:1.55}
 
-/* Expert cards */
-.expert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
-.expert-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:14px 16px;transition:all .15s}
-.expert-card:hover{border-color:var(--mem-bd);box-shadow:var(--sh2);transform:translateY(-1px)}
-.expert-card.ec-left{border-left:3px solid var(--bd3);opacity:.75}
-.expert-card.ec-left:hover{border-left-color:var(--warn)}
-.ec-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.ec-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--srf);flex-shrink:0}
-.ec-av-active{background:linear-gradient(135deg,var(--mem),#0EA5E9)}
-.ec-av-left{background:var(--bd2);color:var(--t4)}
-.ec-info{flex:1}
-.ec-name{font-size:13px;font-weight:600;color:var(--t1);letter-spacing:-.1px;margin-bottom:2px}
-.ec-role{font-size:11px;color:var(--t3);line-height:1.3}
-.ec-status-badge{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap}
-.esb-active{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
-.esb-left{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
-.ec-contact{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:6px 8px;background:var(--srf2);border-radius:var(--r6);border:1px solid var(--bd)}
-.ec-contact-icon svg{width:12px;height:12px;stroke:var(--mem);fill:none;stroke-width:1.8;flex-shrink:0}
-.ec-email{font-size:11px;color:var(--mem);font-weight:500;text-decoration:none}
-.ec-email:hover{text-decoration:underline}
-.ec-no-contact{font-size:11px;color:var(--t4);font-style:italic}
-.ec-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
-.ec-tag{font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:var(--mem-bg);color:var(--mem);border:1px solid var(--mem-bd)}
-.ec-footer{display:flex;align-items:center;justify-content:space-between;padding-top:7px;border-top:1px solid var(--bd)}
-.ec-loc{font-size:10.5px;color:var(--t4);display:flex;align-items:center;gap:4px}
-.ec-loc svg{width:10px;height:10px;stroke:var(--t4);fill:none;stroke-width:1.8;flex-shrink:0}
-.ec-inc{font-size:10.5px;color:var(--t4)}
+/* ─── STEP RENDERER ─── */
+.trace-wrapper{background:var(--srf2);border:1px solid var(--bd);border-radius:var(--r8);padding:16px;margin-bottom:14px}
+.trace-header{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:var(--t1);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:12px}
+.trace-header svg{stroke:var(--ok);fill:none;stroke-width:2;width:14px;height:14px}
+.trace-timeline{display:flex;flex-direction:column;gap:10px}
+.trace-node{display:flex;gap:12px;align-items:flex-start}
+.trace-index{width:20px;height:20px;border-radius:50%;background:var(--blue-bd);color:var(--blue-dk);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trace-content{font-size:12.5px;color:var(--t2);line-height:1.5}
 
-/* Incident timeline */
-.timeline{margin-bottom:12px;position:relative}
-.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:1.5px;background:var(--bd2)}
-.tl-item{display:flex;gap:14px;padding:0 0 12px 0;position:relative}
-.tl-dot{width:21px;height:21px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;background:var(--srf)}
-.tl-dot.crit{border-color:var(--danger);background:#FFF5F5}
-.tl-dot.high{border-color:var(--warn);background:#FFFBEB}
-.tl-dot.med{border-color:#3B82F6;background:#EFF6FF}
-.tl-dot svg{width:9px;height:9px;fill:none;stroke-width:2}
-.tl-dot.crit svg{stroke:var(--danger)} .tl-dot.high svg{stroke:var(--warn)} .tl-dot.med svg{stroke:#2563EB}
-.tl-content{flex:1;padding-top:1px}
-.tl-header{display:flex;align-items:center;gap:7px;margin-bottom:2px}
-.tl-id{font-size:10px;font-weight:700;color:var(--t4);font-family:var(--mono)}
-.tl-date{font-size:10px;color:var(--t4)}
-.tl-sev{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:auto}
-.ts-crit{background:#FEF2F2;color:var(--danger)} .ts-high{background:#FFFBEB;color:var(--warn)} .ts-med{background:#EFF6FF;color:#1D4ED8}
-.tl-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
-.tl-desc{font-size:11.5px;color:var(--t3);line-height:1.4}
-.tl-by{font-size:10.5px;color:var(--t4);margin-top:3px}
+/* ─── EXPERT GRID CARDS ─── */
+.experts-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.expert-profile{background:var(--srf2);border:1px solid var(--bd);border-radius:var(--r8);padding:14px}
+.ep-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ep-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1.5px solid}
+.epa-active{background:var(--blue-lt);color:var(--blue);border-color:var(--blue-bd)}
+.epa-inactive{background:#FEF9C3;color:#92400E;border-color:#FDE68A}
+.ep-name{font-size:13px;font-weight:600;color:var(--t1)}
+.ep-meta{font-size:11.5px;color:var(--t3)}
+.ep-status{display:inline-flex;align-items:center;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:12px;margin-bottom:8px}
+.eps-active{background:#DCFCE7;color:#15803D}
+.eps-inactive{background:#FEF9C3;color:#92400E}
+.ep-communication{display:flex;align-items:center;gap:6px;font-size:11.5px;margin-bottom:6px}
+.ep-communication a{color:var(--blue);text-decoration:none}
+.ep-communication a:hover{text-decoration:underline}
+.ep-communication svg{stroke:var(--blue);fill:none;stroke-width:1.8;width:12px;height:12px}
+.ep-comm-disabled{font-size:11.5px;color:var(--t4);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.ep-comm-disabled svg{stroke:var(--t4);fill:none;stroke-width:1.8;width:12px;height:12px}
+.ep-specialization{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px}
+.ep-specialization svg{stroke:var(--t3);fill:none;stroke-width:1.8;width:12px;height:12px}
 
-/* Source footer */
-.rc-src{display:flex;align-items:center;gap:5px;margin-top:11px;padding-top:10px;border-top:1px solid var(--bd);font-size:10.5px;color:var(--t4);font-family:var(--mono)}
-.rc-src svg{width:11px;height:11px;stroke:var(--t4);fill:none;stroke-width:1.5;flex-shrink:0}
-.src-val{color:var(--mem);font-weight:500}
-.src-val.iris-src{color:var(--iris)}
+/* ─── INCIDENT CHAIN TIMELINE ─── */
+.history-chain{margin-bottom:14px}
+.hc-event{display:flex;gap:14px;padding-bottom:14px;position:relative}
+.hc-event:not(:last-child)::before{content:'';position:absolute;left:7px;top:18px;bottom:0;width:1px;background:var(--bd2)}
+.hc-marker{width:15px;height:15px;border-radius:50%;border:2px solid;flex-shrink:0;background:var(--srf);margin-top:3px;z-index:1}
+.hcm-critical{border-color:var(--danger)} .hcm-high{border-color:var(--warn)} .hcm-moderate{border-color:#3B82F6}
+.hc-details{flex:1}
+.hc-meta-line{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.hc-uid{font-size:10px;font-weight:600;color:var(--t4);font-family:var(--mono)}
+.hc-timestamp{font-size:10px;color:var(--t4)}
+.hc-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px}
+.hcb-critical{background:#FEF2F2;color:var(--danger)} .hcb-high{background:#FFF7ED;color:var(--warn)} .hcb-moderate{background:#EFF6FF;color:#1D4ED8}
+.hc-summary-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.hc-cause-desc{font-size:12px;color:var(--t3)}
+.hc-owner{font-size:10.5px;color:var(--t4);margin-top:4px}
 
-/* Combined */
-.comb-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
-.sub-panel{border:1px solid var(--bd);border-radius:var(--r8);overflow:hidden}
-.sub-head{padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--bd)}
-.sh-iris{background:var(--iris-bg);color:var(--iris)} .sh-mem{background:var(--mem-bg);color:var(--mem)}
-.sub-body{padding:11px 12px;font-size:12px;color:var(--t2);line-height:1.5}
-.sub-sum{margin-bottom:9px;font-size:12px;color:var(--t2);line-height:1.55}
-.sub-sum strong{color:var(--t1);font-weight:600}
+/* ─── CARD ORIGINS ─── */
+.origin-stamp{display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);font-size:11px;color:var(--t4);font-family:var(--mono)}
+.origin-stamp svg{stroke:var(--t4);fill:none;stroke-width:1.8;width:11px;height:11px}
+.origin-source-link{color:var(--blue);font-weight:500}
+.origin-source-link.iris-theme{color:var(--teal)}
 
-/* Fallback */
-.fb-list{display:flex;flex-direction:column;gap:3px;margin-top:8px}
-.fb-item{padding:8px 11px;border-radius:var(--r8);font-size:12.5px;color:var(--t3);cursor:pointer;transition:all .12s;border:1px solid transparent;background:var(--srf3)}
-.fb-item:hover{background:var(--mem-bg);color:var(--mem);border-color:var(--mem-bd)}
+/* ─── SIDE-BY-SIDE PANELS ─── */
+.hybrid-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.hybrid-pane{border:1px solid var(--bd);border-radius:var(--r8);overflow:hidden;background:#fff}
+.hp-header{padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.hph-memora{background:var(--blue-lt);color:var(--blue)} .hph-iris{background:var(--teal-lt);color:var(--teal)}
+.hp-content{padding:14px}
+.hp-text-summary{font-size:12.5px;color:var(--t2);line-height:1.55;margin-bottom:12px}
+.hp-text-summary strong{color:var(--t1)}
 
-/* Typing */
-.typing{display:flex;align-items:center;gap:11px;background:var(--srf);border:1px solid var(--bd);border-radius:var(--r16);padding:12px 16px;box-shadow:var(--sh1);animation:fadeUp .18s ease both;margin-bottom:14px}
-.td-dots{display:flex;gap:4px;align-items:center}
-.td-dot{width:7px;height:7px;border-radius:50%;animation:tdB 1.3s infinite}
-.td-dot:nth-child(1){background:var(--mem-acc);animation-delay:0s}
-.td-dot:nth-child(2){background:var(--iris);animation-delay:.18s}
-.td-dot:nth-child(3){background:var(--comb);animation-delay:.36s}
-@keyframes tdB{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-.td-lbl{font-size:12px;color:var(--t4)}
-.td-engs{display:flex;gap:5px;margin-left:auto}
-.td-eng{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:3px}
-.te-m{background:var(--mem-bg);color:var(--mem)} .te-i{background:var(--iris-bg);color:var(--iris)}
+/* ─── INPUT PANEL STYLES ─── */
+.input-dock{background:var(--srf);border-top:1px solid var(--bd);padding:16px 24px;flex-shrink:0}
+.input-container-row{max-width:850px;margin:0 auto;display:flex;align-items:center;gap:10px;border:1.5px solid var(--bd2);border-radius:28px;padding:8px 16px;transition:border-color 0.2s;background:var(--srf)}
+.input-container-row:focus-within{border-color:var(--blue)}
+.input-container-row.kb-focus:focus-within{border-color:var(--teal)}
+.input-icon-frame{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.input-icon-frame svg{stroke-width:2;width:13px;height:13px;fill:none}
+.mem-frame{background:var(--blue-lt)} .mem-frame svg{stroke:var(--blue)}
+.kb-frame{background:var(--srf3)} .kb-frame svg{stroke:var(--t3)}
+input.chat-core-input{flex:1;border:none;outline:none;font-family:var(--font);font-size:14px;color:var(--t1);background:transparent}
+input.chat-core-input::placeholder{color:var(--t4)}
+.action-submit-btn{display:flex;align-items:center;gap:6px;padding:8px 18px;border:none;border-radius:20px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.12s;flex-shrink:0}
+.action-submit-btn:disabled{opacity:0.4;cursor:not-allowed}
+.action-submit-btn svg{fill:none;stroke:#fff;stroke-width:2.5;width:12px;height:12px}
+.asb-memora{background:var(--blue);color:#fff}
+.asb-memora:hover:not(:disabled){background:var(--blue-dk)}
+.asb-iris{background:var(--teal);color:#fff}
+.asb-iris:hover:not(:disabled){background:var(--teal);opacity:0.9}
+.input-footer-meta{max-width:850px;margin:8px auto 0;display:flex;justify-content:space-between;padding:0 6px;font-size:11.5px;color:var(--t4)}
 
-/* User bubble */
-.user-turn{display:flex;justify-content:flex-end;animation:fadeUp .18s ease both;margin-bottom:14px}
-.user-bubble{background:var(--iris);color:#fff;padding:10px 15px;border-radius:18px 18px 4px 18px;font-size:13.5px;max-width:66%;line-height:1.55;letter-spacing:-.1px}
+/* ─── RUNTIME STREAM LOADERS ─── */
+.stream-loader{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:12px 16px;box-shadow:var(--sh);margin-bottom:20px;display:flex;align-items:center;gap:12px;animation:slideUp 0.15s ease both;max-width:max-content}
+.loader-dots{display:flex;gap:4px}
+.loader-dot{width:6px;height:6px;border-radius:50%;animation:bounceFrame 1.1s infinite}
+.loader-dot:nth-child(1){background:var(--blue);animation-delay:0s}
+.loader-dot:nth-child(2){background:var(--teal);animation-delay:0.14s}
+.loader-dot:nth-child(3){background:var(--ok);animation-delay:0.28s}
+@keyframes bounceFrame{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.loader-label{font-size:12px;color:var(--t2);font-weight:500}
 
-/* ── INPUT BAR */
-.input-zone{background:var(--srf);border-top:1px solid var(--bd);padding:12px 28px 14px;flex-shrink:0}
-.input-row{display:flex;align-items:center;gap:9px;background:var(--srf);border:1.5px solid var(--bd2);border-radius:var(--r20);padding:9px 12px;transition:all .2s}
-.input-row:focus-within{border-color:var(--mem);box-shadow:var(--focus)}
-.input-pre{width:26px;height:26px;background:var(--mem-bg);border-radius:var(--r6);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.input-pre svg{stroke:var(--mem);fill:none;stroke-width:1.8;width:13px;height:13px}
-.input-pre.ip-iris{background:var(--iris-bg)}
-.input-pre.ip-iris svg{stroke:var(--iris)}
-#qInput,#qInputM{flex:1;border:none;outline:none;font-family:var(--font);font-size:13.5px;color:var(--t1);background:transparent;caret-color:var(--mem)}
-#qInput::placeholder,#qInputM::placeholder{color:var(--t4)}
-.send-btn-mem{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--mem);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;flex-shrink:0;letter-spacing:-.1px}
-.send-btn-mem:hover{background:var(--mem-h);box-shadow:var(--sh1)}
-.send-btn-mem:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
-.send-btn-mem svg{stroke:#fff;fill:none;stroke-width:2;width:13px;height:13px}
-.send-btn-iris{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--iris);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;flex-shrink:0;letter-spacing:-.1px}
-.send-btn-iris:hover{background:var(--iris-h);box-shadow:var(--sh1)}
-.send-btn-iris:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
-.send-btn-iris svg{stroke:#fff;fill:none;stroke-width:2;width:13px;height:13px}
-.input-meta{display:flex;justify-content:space-between;margin-top:7px;padding:0 2px;font-size:11px;color:var(--t4)}
-.meta-left{display:flex;align-items:center;gap:5px}
-.m-dot{width:5px;height:5px;border-radius:50%;background:var(--ok)}
+.suggestion-array{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.suggestion-pill{padding:10px 14px;border-radius:var(--r6);font-size:13px;color:var(--t2);cursor:pointer;background:var(--srf2);border:1px solid transparent;transition:all 0.1s}
+.suggestion-pill:hover{background:var(--blue-lt);color:var(--blue);border-color:var(--blue-bd)}
 
-/* ── MEMORA VIEW */
-.mem-view{flex:1;height:0;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0}
-.mem-view::-webkit-scrollbar{width:5px}
-.mem-view::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
-.mem-header{background:var(--srf);border-bottom:1px solid var(--bd);padding:24px 32px}
-.mh-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:var(--mem-bg);border:1px solid var(--mem-bd);margin-bottom:10px}
-.mh-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--mem-acc);animation:pulse 2s infinite}
-.mh-badge-txt{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mem)}
-.mem-header h2{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;margin-bottom:6px}
-.mem-header p{font-size:13px;color:var(--t3);line-height:1.55;max-width:560px;margin-bottom:20px}
-.mh-stats-row{display:flex;gap:12px}
-.mh-stat-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--r8);padding:10px 14px;min-width:90px}
-.mh-stat-val{font-size:20px;font-weight:700;color:#fff}
-.mh-stat-lbl{font-size:10px;color:#93C5FD;margin-top:2px}
-.mem-body{padding:20px 28px}
-.mem-section-title{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t4);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.mem-section-title::after{content:'';flex:1;height:1px;background:var(--bd)}
-.mem-q-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
-.mem-q-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r8);padding:12px 14px;cursor:pointer;transition:all .12s}
-.mem-q-card:hover{border-color:var(--mem-bd);background:var(--mem-bg);transform:translateY(-1px);box-shadow:var(--sh1)}
-.mqc-tag{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mem);margin-bottom:5px}
-.mqc-q{font-size:12.5px;color:var(--t1);font-weight:500;line-height:1.4}
-.mem-cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-.mem-cap{background:var(--srf2);border:1px solid var(--bd);border-radius:var(--r8);padding:12px 14px}
-.mc-icon{width:28px;height:28px;background:var(--mem-bg);border-radius:var(--r6);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
-.mc-icon svg{stroke:var(--mem);fill:none;stroke-width:1.7;width:14px;height:14px}
-.mc-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
-.mc-desc{font-size:11px;color:var(--t3);line-height:1.45}
-
-/* ── DASHBOARD */
-.dash-view{flex:1;height:0;min-height:0;overflow-y:auto;padding:24px 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start}
-.dash-view::-webkit-scrollbar{width:5px}
-.dash-view::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
-.kpi-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.kpi{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:16px 18px;box-shadow:var(--sh1)}
-.kpi-label{font-size:10.5px;font-weight:600;color:var(--t4);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
-.kpi-val{font-size:24px;font-weight:600;color:var(--t1);letter-spacing:-.8px;line-height:1}
-.kpi-sub{font-size:11px;color:var(--t4);margin-top:5px}
-.kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:6px}
-.kpi-up{background:#F0FDF4;color:#166534}
-.dash-card{background:var(--srf);border:1px solid var(--bd);border-radius:var(--r12);padding:16px 18px;box-shadow:var(--sh1)}
-.dc-full{grid-column:1/-1} .dc-2{grid-column:span 2}
-.dash-card h3{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.3px;text-transform:uppercase;margin-bottom:14px}
-.dash-chart{position:relative;height:180px}
-.dash-chart canvas{max-height:180px}
-.inc-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
-.inc-row:last-child{border-bottom:none}
-.sev-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
-.sev-crit{background:var(--danger)} .sev-high{background:var(--warn)} .sev-med{background:#2563EB}
-.inc-id{font-size:10px;font-weight:600;color:var(--t4);font-family:var(--mono);white-space:nowrap;flex-shrink:0;min-width:70px}
-.inc-info{flex:1}
-.inc-sys{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
-.inc-cause{font-size:11.5px;color:var(--t3);line-height:1.4}
-.inc-meta{font-size:10px;color:var(--t4);margin-top:3px}
-.inc-sev-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:3px}
-.is-crit{background:#FEF2F2;color:var(--danger)} .is-high{background:#FFFBEB;color:var(--warn)} .is-med{background:#EFF6FF;color:#1D4ED8}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <header class="topbar">
-  <a class="tb-brand" href="#">
-    <div class="tb-logo">
-      <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><path d="M9 5v4l2.5 2.5" stroke-linecap="round"/></svg>
+  <a class="brand" href="#">
+    <div class="brand-mark">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#fff" stroke-width="1.8"/><path d="M7 5v2l1.5 1.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
     </div>
-    <div class="tb-name">Algonox <em>MEMORA</em></div>
+    <div class="brand-name">Algonox <span>Intelligence Core</span></div>
   </a>
-  <div class="tb-sep"></div>
-  <nav class="tb-nav">
-    <div class="nav-btn nb-mem active" onclick="switchView('memora',this)"><div class="nb-dot nb-dot-mem"></div>MEMORA</div>
-    <div class="nav-btn nb-iris" onclick="switchView('chat',this)"><div class="nb-dot nb-dot-iris"></div>IRIS Query</div>
-    <div class="nav-btn nb-dash" onclick="switchView('dash',this)"><div class="nb-dot nb-dot-dash"></div>Analytics</div>
+  
+  <nav class="engine-selector">
+    <button class="engine-tab active t-mem" onclick="toggleEngineView('memora', this)"><div class="pip p-mem"></div>MEMORA Log Matrix</button>
+    <button class="engine-tab t-kb" onclick="toggleEngineView('kb', this)"><div class="pip p-kb"></div>IRIS Data Engine</button>
   </nav>
-  <div class="tb-right">
-    <div class="live-badge"><div class="live-dot"></div>Live</div>
-    <div class="tb-avatar">AG</div>
+
+  <div class="tb-r">
+    <div class="status-node"><div class="pulse-dot"></div>Data Stream Active</div>
+    <div class="user-avatar">AG</div>
   </div>
 </header>
 
 <div class="layout">
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sb-section">
-    <div class="sb-label">MEMORA Queries</div>
-  </div>
-  <div class="sb-scroll" id="qList"></div>
-  <div class="sb-divider"></div>
-  <div class="legend-wrap">
-    <div class="sb-label" style="padding:6px 6px 5px">Engine Legend</div>
-    <div class="leg-row"><span class="leg-chip lc-mem">MEMORA</span><span class="leg-txt">Organizational memory & incidents</span></div>
-    <div class="leg-row"><span class="leg-chip lc-iris">IRIS</span><span class="leg-txt">Live data from structured sources</span></div>
-    <div class="leg-row"><span class="leg-chip lc-comb">COMBINED</span><span class="leg-txt">Both engines, one response</span></div>
-  </div>
-</aside>
+  <aside class="sidebar">
+    <div class="sb-header">MEMORA System Indexes</div>
+    <div class="sb-list" id="memoraContextList"></div>
+    <div style="height:1px; background:var(--bd); margin:4px 12px;"></div>
+    <div class="sb-header">IRIS Tabular Sets</div>
+    <div class="sb-list" id="irisContextList"></div>
+  </aside>
 
-<!-- MAIN -->
-<div class="main">
+  <main class="main-stage">
 
-  <!-- MEMORA VIEW (DEFAULT HERO) -->
-  <div class="view active" id="view-memora" style="flex-direction:column">
-    <div class="mem-view" id="memoraFeed">
-      <div class="mem-header">
-        <div class="mh-badge"><div class="mh-badge-dot"></div><span class="mh-badge-txt">Enterprise Operational Memory</span></div>
-        <h2>MEMORA — Organizational Intelligence</h2>
-        <p>Ask about past incidents, root causes, expert knowledge, compliance history, and recurring failure patterns. MEMORA surfaces what your organization has learned — instantly.</p>
-        <div class="mh-stats-row" id="memoraStats">
-          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Incidents Indexed</div></div>
-          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Experts Mapped</div></div>
-          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Avg Resolution</div></div>
-          <div class="mh-stat-box"><div class="mh-stat-val">—</div><div class="mh-stat-lbl">Critical Resolved</div></div>
+    <div class="view-panel active" id="pane-memora">
+      <div class="chat-scroll" id="mScrollContainer">
+        <div class="welcome-deck" id="mIntroDeck">
+          <h1>MEMORA Incident Memory Network</h1>
+          <p>Instantly map platform anomalies, review step-by-step technical mitigation pathways, or locate structural subject matter specialists.</p>
+          <div class="deck-grid" id="mIntroGrid"></div>
         </div>
+        <div class="conversation-canvas" id="mCanvas" style="display:none;"></div>
       </div>
-      <div class="mem-body">
-        <div class="mem-section-title">Ask MEMORA</div>
-        <div class="mem-q-grid" id="memoraGrid"></div>
-        <div class="mem-section-title">MEMORA Capabilities</div>
-        <div class="mem-cap-grid">
-          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2" stroke-linecap="round"/></svg></div><div class="mc-title">Incident Memory</div><div class="mc-desc">Retrieves historical incidents, root causes, and resolutions across ACE Platform and Sweet Hello AI.</div></div>
-          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="3"/><circle cx="12" cy="10" r="2"/><path d="M9 6.5l1.5 2" stroke-linecap="round"/></svg></div><div class="mc-title">Expert Discovery</div><div class="mc-desc">Maps who resolved what. Identifies the right SME for any incident domain — instantly.</div></div>
-          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><path d="M3 12L6 7l3 3 2-4 2 5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="mc-title">Pattern Analysis</div><div class="mc-desc">Identifies recurring failure categories and systemic risks before they escalate.</div></div>
-          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/></svg></div><div class="mc-title">Compliance Memory</div><div class="mc-desc">Tracks regulatory incidents, enforced remediations, and TRAI/GDPR audit history.</div></div>
-          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><path d="M8 2v4M8 10v4M2 8h4M10 8h4" stroke-linecap="round"/></svg></div><div class="mc-title">Root Cause Intelligence</div><div class="mc-desc">Infers likely causes using dependency graphs, workflow relationships, and incident patterns.</div></div>
-          <div class="mem-cap"><div class="mc-icon"><svg viewBox="0 0 16 16"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="8" cy="12" r="2"/><path d="M4 6v2c0 2 4 4 4 4M12 6v2c0 2-4 4-4 4"/></svg></div><div class="mc-title">Knowledge Graph</div><div class="mc-desc">Connects employees, systems, incidents, vendors, and resolutions into a living graph.</div></div>
+      
+      <div class="input-dock">
+        <div class="input-container-row">
+          <div class="input-icon-frame mem-frame">
+            <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--blue)" stroke-width="1.8"/><path d="M6 4.5V6l1.2 1.2" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <input id="inputM" class="chat-core-input" type="text" placeholder="Identify anomalous footprints (e.g., Salesforce OAuth routing loop)..." autocomplete="off"/>
+          <button class="action-submit-btn asb-memora" id="submitM" onclick="submitEngineQuery('mem')">
+            <svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5h7M6 2l3.5 3.5L6 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Ask MEMORA
+          </button>
+        </div>
+        <div class="input-footer-meta">
+          <div>Diagnostics Layer: Operational</div>
+          <div>Targeting cluster memory stacks</div>
         </div>
       </div>
     </div>
-    <div class="input-zone">
-      <div class="input-row">
-        <div class="input-pre"><svg viewBox="0 0 14 14"><circle cx="8" cy="8" r="5"/><path d="M8 6v2l1.5 1.5" stroke-linecap="round"/></svg></div>
-        <input id="qInputM" type="text" autocomplete="off" placeholder="Ask MEMORA — incidents, root causes, expert discovery, compliance history..."/>
-        <button class="send-btn-mem" id="sendBtnM" onclick="handleSendM()">
-          <svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Ask MEMORA
-        </button>
-      </div>
-      <div class="input-meta">
-        <div class="meta-left"><div class="m-dot"></div>MEMORA — incidents indexed · experts mapped · 2023–2025</div>
-        <div>Click any question above or type your own</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- IRIS CHAT VIEW -->
-  <div class="view" id="view-chat" style="flex-direction:column">
-    <div class="chat-feed" id="chatFeed">
-      <div class="welcome" id="welcome">
-        <div class="wlc-mem-icon" style="background:linear-gradient(135deg,var(--iris),#818CF8)">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    <div class="view-panel" id="pane-kb">
+      <div class="chat-scroll" id="kbScrollContainer">
+        <div class="welcome-deck" id="kbIntroDeck">
+          <h1>IRIS Live Ledger Platform</h1>
+          <p>Query cross-sheet analytical records, operational conversion models, dynamic pipeline performance, and multi-market financial timelines.</p>
+          <div class="deck-grid" id="kbIntroGrid"></div>
         </div>
-        <h2>IRIS — Live Data Intelligence</h2>
-        <p>Query Algonox's live structured data — pipeline, revenue, deals, prospects, and team performance. MEMORA memory also available here.</p>
-        <div class="wlc-pills">
-          <span class="wlc-pill wp-iris">Live Pipeline Data</span>
-          <span class="wlc-pill wp-iris">Revenue Analytics</span>
-          <span class="wlc-pill wp-mem">+ MEMORA Memory</span>
+        <div class="conversation-canvas" id="kbCanvas" style="display:none;"></div>
+      </div>
+      
+      <div class="input-dock">
+        <div class="input-container-row kb-focus">
+          <div class="input-icon-frame kb-frame">
+            <svg viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2" width="9" height="8" rx="1.5" stroke="var(--t3)" stroke-width="1.8"/><path d="M4 5h4M4 7.5h2.5" stroke="var(--t3)" stroke-width="1.8"/></svg>
+          </div>
+          <input id="inputK" class="chat-core-input" type="text" placeholder="Request data matrix extraction (e.g., Show product revenue splits for FY2025)..." autocomplete="off"/>
+          <button class="action-submit-btn asb-iris" id="submitK" onclick="submitEngineQuery('iris')">
+            <svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5h7M6 2l3.5 3.5L6 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Search IRIS
+          </button>
         </div>
-        <div class="wlc-grid">
-          <div class="wlc-card wi" onclick="sendQ('Show revenue by product')"><div class="wlc-label">IRIS — Revenue</div><div class="wlc-q">Show revenue by product</div></div>
-          <div class="wlc-card wi" onclick="sendQ('Who is the top account executive?')"><div class="wlc-label">IRIS — Sales</div><div class="wlc-q">Who is the top account executive?</div></div>
-          <div class="wlc-card wm" onclick="sendQ('What recurring issues should we fix in the ACE Platform?')"><div class="wlc-label">MEMORA — Patterns</div><div class="wlc-q">ACE Platform recurring issues</div></div>
-          <div class="wlc-card wm" onclick="sendQ('Give me an Algonox company overview')"><div class="wlc-label">Combined — Both Engines</div><div class="wlc-q">Algonox company overview</div></div>
+        <div class="input-footer-meta">
+          <div>Workbook Matrix Link: Connected</div>
+          <div>Active validation against algonox_data.xlsx</div>
         </div>
       </div>
     </div>
-    <div class="input-zone">
-      <div class="input-row">
-        <div class="input-pre ip-iris"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1.5"/><path d="M5 3V2M9 3V2"/></svg></div>
-        <input id="qInput" type="text" autocomplete="off" placeholder="Ask about pipeline, revenue, incidents, verticals, lead sources, team experts..."/>
-        <button class="send-btn-iris" id="sendBtn" onclick="handleSend()">
-          <svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Run Query
-        </button>
-      </div>
-      <div class="input-meta">
-        <div class="meta-left"><div class="m-dot"></div>algonox_data.xlsx — 5 sources active · IRIS + MEMORA</div>
-        <div>Algonox Intelligence Platform v2.0</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ANALYTICS DASHBOARD -->
-  <div class="view" id="view-dash">
-    <div class="dash-view" id="dashContent">
-      <div class="kpi-row" id="kpiRow"></div>
-      <div class="dash-card dc-2"><h3>Quarterly Revenue Trend</h3><div class="dash-chart"><canvas id="revChart"></canvas></div></div>
-      <div class="dash-card"><h3>Revenue by Vertical</h3><div class="dash-chart"><canvas id="vertChart"></canvas></div></div>
-      <div class="dash-card"><h3>Product Revenue Split</h3><div class="dash-chart"><canvas id="prodChart"></canvas></div></div>
-      <div class="dash-card"><h3>Market Split — US vs India</h3><div class="dash-chart"><canvas id="mktChart"></canvas></div></div>
-      <div class="dash-card"><h3>Win / Loss by AE</h3><div class="dash-chart"><canvas id="wlChart"></canvas></div></div>
-      <div class="dash-card dc-full"><h3>MEMORA — Recent Incident Log</h3><div id="incList"></div></div>
-    </div>
-  </div>
-
-</div><!-- /main -->
-</div><!-- /layout -->
+  </main>
+</div>
 
 <script>
-const API =
-  window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://memora-tdzu.onrender.com";let dashLoaded=false;
+const API_URL = 'http://localhost:3000';
 
-// ── Sidebar queries (MEMORA first) ─────────────────────────
-const SIDEBAR=[
-  {t:'ACE Platform incident history',e:'mem'},
-  {t:'Sweet Hello AI voice call incidents',e:'mem'},
-  {t:'Show critical severity incidents',e:'mem'},
-  {t:'Who handles voice call quality issues?',e:'mem'},
-  {t:'Recurring incident patterns & RCA',e:'mem'},
-  {t:'Compliance & TRAI incident history',e:'mem'},
-  {t:'Who resolves NLP and AI/ML issues?',e:'mem'},
-  {t:'Show the full incident log',e:'mem'},
-  {t:'What is MEMORA and how does it work?',e:'mem'},
-  {t:'Show revenue by product',e:'iris'},
-  {t:'Who is the top account executive?',e:'iris'},
-  {t:'Show quarterly revenue trend',e:'iris'},
-  {t:'Revenue by vertical / industry',e:'iris'},
-  {t:'Show pipeline win rate and funnel',e:'iris'},
-  {t:'Give me an Algonox company overview',e:'comb'},
+const SYSTEM_LOG_SHORTCUTS = [
+  { label: 'Parallel queue deadlock trace', raw: 'Agent task queue deadlock during parallel execution' },
+  { label: 'Salesforce API pipeline failure', raw: 'Salesforce OAuth connector not working — pipeline stalled' },
+  { label: 'US voice trunk drops', raw: 'Outbound calls dropping on US toll-free lines' },
+  { label: 'Language path fallback loop', raw: 'IVR stuck in loop on Hindi language fallback path' }
 ];
-const ICONS={
-  mem:`<svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1.5"/></svg>`,
-  iris:`<svg viewBox="0 0 12 12"><rect x="1.5" y="4" width="9" height="7" rx="1"/><path d="M4 4V3a2 2 0 014 0v1"/></svg>`,
-  comb:`<svg viewBox="0 0 12 12"><path d="M6 1L10.5 3.5V8.5L6 11L1.5 8.5V3.5L6 1Z"/></svg>`
-};
-(function buildSidebar(){
-  const list=document.getElementById('qList');
-  SIDEBAR.forEach(q=>{
-    const el=document.createElement('div');
-    el.className='q-item';
-    el.innerHTML=`<div class="q-icon qi-${q.e}">${ICONS[q.e]}</div><div class="q-text">${esc(q.t)}</div>`;
-    el.onclick=()=>{
-      if(q.e==='iris'||q.e==='comb'){switchView('chat',document.querySelectorAll('.nav-btn')[1]);}
-      else{switchView('memora',document.querySelectorAll('.nav-btn')[0]);}
-      sendQ(q.t,q.e);
-    };
-    list.appendChild(el);
+
+const ANALYTICAL_DATA_SHORTCUTS = [
+  { label: 'FY2025 Product Revenue Stream', raw: 'Show revenue by product for FY2025' },
+  { label: 'Pipeline Win Metric Vectors', raw: 'What is the pipeline win rate?' },
+  { label: 'Territory Revenue Split', raw: 'Revenue split between US and India market' },
+  { label: 'Enterprise Executive Overview', raw: 'Give me an Algonox company overview' }
+];
+
+// Structural Initializer Setup
+(() => {
+  const mList = document.getElementById('memoraContextList');
+  SYSTEM_LOG_SHORTCUTS.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'sb-item';
+    btn.innerHTML = `<div class="sb-dot sbd-mem"></div><div class="sb-lbl">${escapeTxt(item.label)}</div>`;
+    btn.onclick = () => { toggleEngineView('memora', document.querySelectorAll('.engine-tab')[0]); executeTransaction(item.raw, 'mem'); };
+    mList.appendChild(btn);
+  });
+
+  const iList = document.getElementById('irisContextList');
+  ANALYTICAL_DATA_SHORTCUTS.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'sb-item';
+    btn.innerHTML = `<div class="sb-dot sbd-iris"></div><div class="sb-lbl">${escapeTxt(item.label)}</div>`;
+    btn.onclick = () => { toggleEngineView('kb', document.querySelectorAll('.engine-tab')[1]); executeTransaction(item.raw, 'iris'); };
+    iList.appendChild(btn);
+  });
+
+  const mGrid = document.getElementById('mIntroGrid');
+  SYSTEM_LOG_SHORTCUTS.forEach(item => {
+    const frame = document.createElement('div');
+    frame.className = 'deck-trigger';
+    frame.innerHTML = `<div class="dt-category">Anomaly Index</div><div class="dt-text">${escapeTxt(item.raw)}</div>`;
+    frame.onclick = () => executeTransaction(item.raw, 'mem');
+    mGrid.appendChild(frame);
+  });
+
+  const kbGrid = document.getElementById('kbIntroGrid');
+  ANALYTICAL_DATA_SHORTCUTS.forEach(item => {
+    const frame = document.createElement('div');
+    frame.className = 'deck-trigger iris-style';
+    frame.innerHTML = `<div class="dt-category">Data Vector</div><div class="dt-text">${escapeTxt(item.raw)}</div>`;
+    frame.onclick = () => executeTransaction(item.raw, 'iris');
+    kbGrid.appendChild(frame);
   });
 })();
 
-// ── Load MEMORA stats from server ───────────────────────────
-fetch(API+'/api/data').then(r=>r.json()).then(d=>{
-  const {incidents,team}=d;
-  const avgRes=(incidents.reduce((s,i)=>s+i.ResolutionTime_hrs,0)/incidents.length).toFixed(1);
-  const crit=incidents.filter(i=>i.Severity==='Critical').length;
-  const statsEl=document.getElementById('memoraStats');
-  if(statsEl){
-    statsEl.innerHTML=`
-      <div class="mh-stat-box"><div class="mh-stat-val">${incidents.length}</div><div class="mh-stat-lbl">Incidents Indexed</div></div>
-      <div class="mh-stat-box"><div class="mh-stat-val">${team.length}</div><div class="mh-stat-lbl">Experts Mapped</div></div>
-      <div class="mh-stat-box"><div class="mh-stat-val">${avgRes}h</div><div class="mh-stat-lbl">Avg Resolution</div></div>
-      <div class="mh-stat-box"><div class="mh-stat-val">${crit}</div><div class="mh-stat-lbl">Critical Resolved</div></div>`;
+function toggleEngineView(targetId, element) {
+  document.querySelectorAll('.view-panel').forEach(pane => pane.classList.remove('active'));
+  document.querySelectorAll('.engine-tab').forEach(tab => tab.classList.remove('active'));
+  document.getElementById('pane-' + targetId).classList.add('active');
+  if(element) element.classList.add('active');
+}
+
+document.getElementById('inputM').addEventListener('keydown', e => { if(e.key === 'Enter') submitEngineQuery('mem') });
+document.getElementById('inputK').addEventListener('keydown', e => { if(e.key === 'Enter') submitEngineQuery('iris') });
+
+function submitEngineQuery(engineKey) {
+  const inputEl = document.getElementById(engineKey === 'mem' ? 'inputM' : 'inputK');
+  const queryValue = inputEl.value.trim();
+  if(!queryValue) return;
+  inputEl.value = '';
+  executeTransaction(queryValue, engineKey);
+}
+
+// Global chart rendering registry incrementor
+let chartIndex = 0;
+
+async function executeTransaction(questionString, engineType) {
+  const isMemEngine = (engineType === 'mem');
+  const scrollBox = isMemEngine ? document.getElementById('mScrollContainer') : document.getElementById('kbScrollContainer');
+  const welcomeDeck = isMemEngine ? document.getElementById('mIntroDeck') : document.getElementById('kbIntroDeck');
+  const chatCanvas = isMemEngine ? document.getElementById('mCanvas') : document.getElementById('kbCanvas');
+  const actionBtn = document.getElementById(isMemEngine ? 'submitM' : 'submitK');
+
+  if(welcomeDeck) welcomeDeck.style.display = 'none';
+  chatCanvas.style.display = 'block';
+  if(actionBtn) actionBtn.disabled = true;
+
+  const msgRow = document.createElement('div');
+  msgRow.className = 'bubble-row';
+  msgRow.innerHTML = `<div class="user-bubble">${escapeTxt(questionString)}</div>`;
+  chatCanvas.appendChild(msgRow);
+
+  const loaderFrame = document.createElement('div');
+  loaderFrame.className = 'stream-loader';
+  loaderFrame.innerHTML = `
+    <div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
+    <span class="loader-label">Processing ${isMemEngine ? 'MEMORA logs' : 'IRIS matrix cells'}…</span>`;
+  chatCanvas.appendChild(loaderFrame);
+  autoScroll(scrollBox);
+
+  try {
+    const rawResponse = await fetch(API_URL + '/api/query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: questionString })
+    });
+    const parsedJSON = await rawResponse.json();
+    loaderFrame.remove();
+    buildStructuredCard(parsedJSON, chatCanvas);
+  } catch (error) {
+    loaderFrame.remove();
+    const systemFaultCard = document.createElement('div');
+    systemFaultCard.className = 'response-container';
+    systemFaultCard.innerHTML = `
+      <div class="rc-header"><span class="engine-badge eb-error">ENVIRONMENT EXCEPTION</span><span class="rc-title">Pipeline Connection Stalled</span></div>
+      <div class="rc-body"><div class="rc-summary">The localized application core is unreachable. Verify runtime conditions via <code>node server.js</code> stack layers.</div></div>`;
+    chatCanvas.appendChild(systemFaultCard);
   }
-}).catch(()=>{});
 
-// ── Load MEMORA question grid ───────────────────────────────
-fetch(API+'/api/memora-questions').then(r=>r.json()).then(items=>{
-  const grid=document.getElementById('memoraGrid');
-  items.forEach(item=>{
-    const el=document.createElement('div');
-    el.className='mem-q-card';
-    el.innerHTML=`<div class="mqc-tag">${esc(item.tag)}</div><div class="mqc-q">${esc(item.q)}</div>`;
-    el.onclick=()=>{sendQ(item.q,'mem')};
-    grid.appendChild(el);
-  });
-}).catch(()=>{});
-
-// ── View switching ──────────────────────────────────────────
-function switchView(id,btn){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
-  if(btn)btn.classList.add('active');
-  if(id==='dash'&&!dashLoaded){loadDashboard();dashLoaded=true}
+  if(actionBtn) actionBtn.disabled = false;
+  autoScroll(scrollBox);
 }
 
-// ── Input handlers ──────────────────────────────────────────
-document.getElementById('qInput').addEventListener('keydown',e=>{if(e.key==='Enter')handleSend()});
-document.getElementById('qInputM').addEventListener('keydown',e=>{if(e.key==='Enter')handleSendM()});
-function handleSend(){const v=document.getElementById('qInput').value.trim();if(!v)return;document.getElementById('qInput').value='';sendQ(v,'iris')}
-function handleSendM(){const v=document.getElementById('qInputM').value.trim();if(!v)return;document.getElementById('qInputM').value='';sendQ(v,'mem')}
+function buildStructuredCard(payload, outputWrapper) {
+  const structuralCard = document.createElement('div');
+  structuralCard.className = 'response-container';
 
-// ── Active feed selector ────────────────────────────────────
-function getActiveFeed(){
-  if(document.getElementById('view-memora').classList.contains('active'))return document.getElementById('memoraFeed');
-  return document.getElementById('chatFeed');
-}
-function getActiveBtn(engine){
-  if(engine==='mem')return document.getElementById('sendBtnM');
-  return document.getElementById('sendBtn');
-}
+  if (payload.type === 'memora') {
+    const validExperts = payload.expertCards && payload.expertCards.length > 0;
+    const validTimeline = payload.timeline && payload.timeline.length > 0;
 
-// ── Main sendQ ──────────────────────────────────────────────
-async function sendQ(question,engine='mem'){
-  // Switch to correct view
-  if(engine==='mem'||engine==='memora'){
-    if(!document.getElementById('view-memora').classList.contains('active'))
-      switchView('memora',document.querySelectorAll('.nav-btn')[0]);
-  } else {
-    if(!document.getElementById('view-chat').classList.contains('active'))
-      switchView('chat',document.querySelectorAll('.nav-btn')[1]);
-  }
-  document.getElementById('welcome')?.remove();
-  const feed=getActiveFeed();
-  const btn=getActiveBtn(engine);
-  if(btn)btn.disabled=true;
-  // User bubble
-  const ub=document.createElement('div');ub.className='user-turn';
-  ub.innerHTML=`<div class="user-bubble">${esc(question)}</div>`;
-  feed.appendChild(ub);
-  // Typing indicator
-  const tp=document.createElement('div');tp.className='typing';
-  tp.innerHTML=`<div class="td-dots"><div class="td-dot"></div><div class="td-dot"></div><div class="td-dot"></div></div><span class="td-lbl">Querying ${engine==='mem'?'MEMORA knowledge base':'IRIS data sources'}...</span><div class="td-engs"><span class="td-eng te-m">MEMORA</span><span class="td-eng te-i">IRIS</span></div>`;
-  feed.appendChild(tp);scroll2end(feed);
-  try{
-    const res=await fetch(API+'/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});
-    const data=await res.json();
-    tp.remove();renderCard(data,feed);
-  }catch(e){
-    tp.remove();
-    const err=document.createElement('div');err.className='rcard';
-    err.innerHTML=`<div class="rc-head"><span class="eng-tag et-help">ERROR</span><span class="rc-title">Server unavailable</span></div><div class="rc-body"><div class="rc-summary">Cannot connect to Node.js server on port 3000. Run <strong>node server.js</strong> in the project directory.</div></div>`;
-    feed.appendChild(err);
-  }
-  if(btn)btn.disabled=false;scroll2end(feed);
-}
-
-// ── Render card ─────────────────────────────────────────────
-let chartCount=0;
-function renderCard(data,container){
-  const card=document.createElement('div');card.className='rcard';
-  if(data.type==='memora'){
-    const hasTimeline=data.timeline&&data.timeline.length>0;
-    const hasExperts=data.expertCards&&data.expertCards.length>0;
-    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-mem">MEMORA</span><span class="rc-title">${esc(data.title)}</span></div>
-    <div class="rc-body">
-      <div class="rc-summary">${fmt(data.summary)}</div>
-      ${hasExperts?expertCards(data.expertCards):tbl(data.table)}
-      ${hasTimeline&&!hasExperts?timeline(data.timeline):''}
-      ${data.memory?`<div class="mem-box"><div class="mem-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2" stroke-linecap="round"/></svg></div><div><div class="mem-lbl">MEMORA Insight</div><div class="mem-txt">${esc(data.memory)}</div></div></div>`:''}
-      <div class="rc-src"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1.5"/></svg>Source: <span class="src-val">${esc(data.source)}</span></div>
-    </div>`;
-    container.appendChild(card);
-  }else if(data.type==='iris'){
-    const cid='c'+chartCount++;
-    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-iris">IRIS</span><span class="rc-title">${esc(data.title)}</span></div>
-    <div class="rc-body">
-      <div class="rc-summary">${fmt(data.summary)}</div>
-      ${data.chart?`<div class="chart-wrap"><div class="chart-title">${esc(data.chart.label)}</div><div class="chart-canvas-wrap"><canvas id="${cid}"></canvas></div></div>`:''}
-      ${tbl(data.table)}
-      <div class="rc-src"><svg viewBox="0 0 12 12"><rect x="1" y="2" width="10" height="8" rx="1"/></svg>Source: <span class="src-val iris-src">${esc(data.source)}</span></div>
-    </div>`;
-    container.appendChild(card);
-    if(data.chart)setTimeout(()=>drawChart(cid,data.chart),50);
-  }else if(data.type==='combined'){
-    const cid='c'+chartCount++;
-    const hasChart=data.iris&&data.iris.chart;
-    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-comb">MEMORA + IRIS</span><span class="rc-title">${esc(data.title)}</span></div>
-    <div class="rc-body">
-      <div class="comb-cols">
-        <div class="sub-panel">
-          <div class="sub-head sh-iris">IRIS — ${esc(data.iris.label)}</div>
-          <div class="sub-body">
-            <div class="sub-sum">${fmt(data.iris.summary)}</div>
-            ${hasChart?`<div class="chart-wrap" style="margin-bottom:8px"><div class="chart-title">${esc(data.iris.chart.label)}</div><div class="chart-canvas-wrap"><canvas id="${cid}"></canvas></div></div>`:''}
-            ${tbl(data.iris.table)}
+    structuralCard.innerHTML = `
+      <div class="rc-header"><span class="engine-badge eb-memora">MEMORA Framework</span><span class="rc-title">${escapeTxt(payload.title)}</span></div>
+      <div class="rc-body">
+        <div class="rc-summary">${boldFormat(payload.summary)}</div>
+        ${validExperts ? buildExpertsGrid(payload.expertCards) : buildTable(payload.table)}
+        ${validTimeline && !validExperts ? buildTimelineChain(payload.timeline) : ''}
+        ${payload.steps && payload.steps.length ? buildTraceTimeline(payload.steps) : ''}
+        ${payload.memory ? `
+          <div class="insight-callout">
+            <div class="ic-icon">
+              <svg viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="var(--blue)" stroke-width="1.8"/><path d="M6.5 4.5V6.5l1.5 1.5" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div class="ic-label">Contextual System Memory Insight</div>
+              <div class="ic-text">${escapeTxt(payload.memory)}</div>
+            </div>
+          </div>` : ''}
+        <div class="origin-stamp">
+          <svg viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="var(--t4)" stroke-width="1.5"/><path d="M5.5 3.5V5.5l1.5 1.5" stroke="var(--t4)" stroke-width="1.5"/></svg>
+          Verification Integrity Stamp: <span class="origin-source-link">${escapeTxt(payload.source)}</span>
+        </div>
+      </div>`;
+  } 
+  else if (payload.type === 'iris') {
+    const allocatedChartId = 'ch_var_' + chartIndex++;
+    structuralCard.innerHTML = `
+      <div class="rc-header"><span class="engine-badge eb-iris">IRIS Dimension</span><span class="rc-title">${escapeTxt(payload.title)}</span></div>
+      <div class="rc-body">
+        <div class="rc-summary">${boldFormat(payload.summary)}</div>
+        ${payload.chart ? `<div class="chart-viewbox"><div class="chart-title">${escapeTxt(payload.chart.label)}</div><div class="chart-area-frame"><canvas id="${allocatedChartId}"></canvas></div></div>` : ''}
+        ${buildTable(payload.table)}
+        <div class="origin-stamp">
+          <svg viewBox="0 0 11 11" fill="none"><rect x="1" y="1.5" width="9" height="8" rx="1.5" stroke="var(--t4)" stroke-width="1.5"/></svg>
+          Verification Integrity Stamp: <span class="origin-source-link iris-theme">${escapeTxt(payload.source)}</span>
+        </div>
+      </div>`;
+    outputWrapper.appendChild(structuralCard);
+    if (payload.chart) setTimeout(() => invokeChartRendering(allocatedChartId, payload.chart), 50);
+    return;
+  } 
+  else if (payload.type === 'combined') {
+    const allocatedChartId = 'ch_var_' + chartIndex++;
+    const supportsChart = payload.iris && payload.iris.chart;
+    structuralCard.innerHTML = `
+      <div class="rc-header"><span class="engine-badge eb-hybrid">Unified Diagnostic Analysis</span><span class="rc-title">${escapeTxt(payload.title)}</span></div>
+      <div class="rc-body">
+        <div class="hybrid-grid">
+          <div class="hybrid-pane">
+            <div class="hp-header hph-iris">IRIS Layer Matrix — ${escapeTxt(payload.iris.label)}</div>
+            <div class="hp-content">
+              <div class="hp-text-summary">${boldFormat(payload.iris.summary)}</div>
+              ${supportsChart ? `<div class="chart-viewbox"><div class="chart-title">${escapeTxt(payload.iris.chart.label)}</div><div class="chart-area-frame"><canvas id="${allocatedChartId}"></canvas></div></div>` : ''}
+              ${buildTable(payload.iris.table)}
+            </div>
+          </div>
+          <div class="hybrid-pane">
+            <div class="hp-header hph-memora">MEMORA Node Event — ${escapeTxt(payload.memora.label)}</div>
+            <div class="hp-content">
+              <div class="hp-text-summary">${boldFormat(payload.memora.summary)}</div>
+              ${buildTable(payload.memora.table)}
+            </div>
           </div>
         </div>
-        <div class="sub-panel">
-          <div class="sub-head sh-mem">MEMORA — ${esc(data.memora.label)}</div>
-          <div class="sub-body">
-            <div class="sub-sum">${fmt(data.memora.summary)}</div>
-            ${tbl(data.memora.table)}
-          </div>
+        <div class="origin-stamp">
+          <svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5h7M5.5 2l3.5 3.5-3.5 3.5" stroke="var(--t4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Consolidated Log Anchor Source: <span class="origin-source-link">${escapeTxt(payload.source)}</span>
         </div>
-      </div>
-      <div class="rc-src"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg>Source: <span class="src-val">${esc(data.source)}</span></div>
-    </div>`;
-    container.appendChild(card);
-    if(hasChart)setTimeout(()=>drawChart(cid,data.iris.chart),50);
-  }else{
-    card.innerHTML=`<div class="rc-head"><span class="eng-tag et-help">HELP</span><span class="rc-title">${esc(data.title)}</span></div>
-    <div class="rc-body">
-      <div class="rc-summary">${esc(data.summary)}</div>
-      <div class="fb-list">${data.suggestions.map(s=>`<div class="fb-item" onclick="sendQ('${s.replace(/'/g,"\\'")}','mem')">${esc(s)}</div>`).join('')}</div>
-    </div>`;
-    container.appendChild(card);
+      </div>`;
+    outputWrapper.appendChild(structuralCard);
+    if (supportsChart) setTimeout(() => invokeChartRendering(allocatedChartId, payload.iris.chart), 50);
+    return;
+  } 
+  else {
+    structuralCard.innerHTML = `
+      <div class="rc-header"><span class="engine-badge eb-error">INTELLIGENCE GUIDE</span><span class="rc-title">${escapeTxt(payload.title)}</span></div>
+      <div class="rc-body">
+        <div class="rc-summary">${escapeTxt(payload.summary)}</div>
+        <div class="suggestion-array">${payload.suggestions.map(phrase => `<div class="suggestion-pill" onclick="toggleEngineView('memora',document.querySelectorAll('.engine-tab')[0]); executeTransaction('${phrase.replace(/'/g, "\\'")}', 'mem')">${escapeTxt(phrase)}</div>`).join('')}</div>
+      </div>`;
   }
+  outputWrapper.appendChild(structuralCard);
 }
 
-// ── Expert cards renderer ───────────────────────────────────
-function expertCards(experts){
-  if(!experts||!experts.length)return'';
-  return`<div class="expert-grid">${experts.map(e=>{
-    const isLeft=e.status==='Left';
-    const initials=e.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
-    const tags=e.expertIn?e.expertIn.split(',').slice(0,3):[];
-    const contactHtml=isLeft
-      ?`<div class="ec-contact"><span class="ec-no-contact">Left organisation in ${e.leftYear||'N/A'}</span></div>`
-      :e.email
-        ?`<div class="ec-contact"><div class="ec-contact-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="8" rx="1"/><path d="M1 4l6 4 6-4"/></svg></div><a class="ec-email" href="mailto:${esc(e.email)}">${esc(e.email)}</a></div>`
-        :`<div class="ec-contact"><span class="ec-no-contact">No email on record</span></div>`;
-    return`<div class="expert-card${isLeft?' ec-left':''}">
-      <div class="ec-top">
-        <div class="ec-avatar ${isLeft?'ec-av-left':'ec-av-active'}">${initials}</div>
-        <div class="ec-info">
-          <div class="ec-name">${esc(e.name)}</div>
-          <div class="ec-role">${esc(e.role)}</div>
+function buildTraceTimeline(steps) {
+  return `
+  <div class="trace-wrapper">
+    <div class="trace-header"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--ok)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Historical Mitigation Vectors & Action Paths</div>
+    <div class="trace-timeline">${steps.map((txt, idx) => `
+      <div class="trace-node">
+        <div class="trace-index">${idx + 1}</div>
+        <div class="trace-content">${escapeTxt(txt)}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function buildExpertsGrid(expertArray) {
+  return `<div class="experts-layout">${expertArray.map(exp => {
+    const initials = (exp.Name || '?').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    const matchesExitedState = exp.isLeft || !!exp.leftYear || !!exp.LeftYear;
+    const historicalExitYear = exp.leftYear || exp.LeftYear;
+    return `
+    <div class="expert-profile">
+      <div class="ep-top">
+        <div class="ep-avatar ${matchesExitedState ? 'epa-inactive' : 'epa-active'}">${initials}</div>
+        <div>
+          <div class="ep-name">${escapeTxt(exp.Name || exp.name)}</div>
+          <div class="ep-meta">${escapeTxt(exp.Role || exp.role)} · ${escapeTxt(exp.Team || exp.team)}</div>
         </div>
-        <span class="ec-status-badge ${isLeft?'esb-left':'esb-active'}">${isLeft?'Left':'Active'}</span>
       </div>
-      ${contactHtml}
-      <div class="ec-tags">${tags.map(t=>`<span class="ec-tag">${esc(t.trim())}</span>`).join('')}</div>
-      <div class="ec-footer">
-        <div class="ec-loc"><svg viewBox="0 0 12 12"><path d="M6 1a3 3 0 010 6C4 7 2 5 2 3a4 4 0 018 0z"/><circle cx="6" cy="3" r="1"/></svg>${esc(e.location)}</div>
-        <div class="ec-inc">${e.incidentsResolved} incident${e.incidentsResolved!==1?'s':''} resolved</div>
+      <div class="ep-status ${matchesExitedState ? 'eps-inactive' : 'eps-active'}">${matchesExitedState ? `Exited Platform Tracking (${historicalExitYear})` : '● Network Connection Online'}</div>
+      ${!matchesExitedState && (exp.Email || exp.email) ? `
+        <div class="ep-communication">
+          <svg viewBox="0 0 12 12" fill="none"><rect x="1" y="2.5" width="10" height="7" rx="1" stroke="var(--blue)" stroke-width="1.5"/><path d="M1 3.5l5 3 5-3" stroke="var(--blue)" stroke-width="1.5"/></svg>
+          <a href="mailto:${escapeTxt(exp.Email || exp.email)}">${escapeTxt(exp.Email || exp.email)}</a>
+        </div>` : `
+        <div class="ep-comm-disabled">
+          <svg viewBox="0 0 12 12" fill="none"><rect x="1" y="2.5" width="10" height="7" rx="1" stroke="var(--t4)" stroke-width="1.5"/><path d="M1 3.5l5 3 5-3" stroke="var(--t4)" stroke-width="1.5"/></svg>
+          <span>Communication Channels Terminated</span>
+        </div>`}
+      <div class="ep-specialization">
+        <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--t3)" stroke-width="1.5"/><path d="M6 3.5V6l1.5 1.5" stroke="var(--t3)" stroke-width="1.5"/></svg>
+        <span>Focus Area: ${escapeTxt(exp.Expert_In || exp.expertIn || exp.Team || exp.team)}</span>
       </div>
     </div>`;
   }).join('')}</div>`;
 }
 
-// ── Timeline renderer ───────────────────────────────────────
-function timeline(items){
-  if(!items||!items.length)return'';
-  const sevCls=s=>s==='Critical'?'crit':s==='High'?'high':'med';
-  const tagCls=s=>s==='Critical'?'ts-crit':s==='High'?'ts-high':'ts-med';
-  return`<div class="timeline">${items.slice(0,6).map(i=>`
-    <div class="tl-item">
-      <div class="tl-dot ${sevCls(i.severity)}"><svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="3"/></svg></div>
-      <div class="tl-content">
-        <div class="tl-header">
-          <span class="tl-id">${esc(i.id)}</span>
-          <span class="tl-date">${esc(i.date)}</span>
-          <span class="tl-sev ${tagCls(i.severity)}">${esc(i.severity)}</span>
+function buildTimelineChain(events) {
+  const lineStyle = sev => sev === 'Critical' ? 'hcm-critical' : sev === 'High' ? 'hcm-high' : 'hcm-moderate';
+  const badgeStyle = sev => sev === 'Critical' ? 'hcb-critical' : sev === 'High' ? 'hcb-high' : 'hcb-moderate';
+  return `<div class="history-chain">${events.slice(0, 5).map(evt => `
+    <div class="hc-event">
+      <div class="hc-marker ${lineStyle(evt.severity)}"></div>
+      <div class="hc-details">
+        <div class="hc-meta-line">
+          <span class="hc-uid">${escapeTxt(evt.id)}</span>
+          <span class="hc-timestamp">${escapeTxt(evt.date)}</span>
+          <span class="hc-badge ${badgeStyle(evt.severity)}">${escapeTxt(evt.severity)}</span>
         </div>
-        <div class="tl-title">${esc(i.title)}</div>
-        <div class="tl-desc">${esc(i.desc)}</div>
-        <div class="tl-by">Resolved by ${esc(i.resolvedBy)} · ${i.hours}h</div>
+        <div class="hc-summary-title">${escapeTxt(evt.title)}</div>
+        <div class="hc-cause-desc">${escapeTxt(evt.desc)}</div>
+        <div class="hc-owner">Resolved Entity: ${escapeTxt(evt.resolvedBy)} · Process Delta: ${evt.hours}h</div>
       </div>
     </div>`).join('')}</div>`;
 }
 
-// ── Chart.js renderer ───────────────────────────────────────
-const PALETTE=['#4F46E5','#0284C7','#059669','#D97706','#DC2626','#7C3AED','#0891B2'];
-function drawChart(canvasId,cfg){
-  const canvas=document.getElementById(canvasId);if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  const ds=cfg.datasets;let chartDs;
-  if(cfg.type==='pie'){const colors=ds[0].colors||PALETTE;chartDs=[{data:ds[0].data,backgroundColor:colors.map(c=>c+'CC'),borderColor:colors,borderWidth:1.5,hoverOffset:4}];}
-  else if(cfg.type==='bar'&&ds.length>1){chartDs=ds.map(d=>({label:d.label,data:d.data,backgroundColor:d.color+'CC',borderColor:d.color,borderWidth:1.5,borderRadius:4}));}
-  else if(cfg.type==='line'){chartDs=ds.map(d=>({label:d.label,data:d.data,borderColor:d.color,backgroundColor:d.color+'18',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:d.color,borderWidth:2}));}
-  else{chartDs=[{label:ds[0].label,data:ds[0].data,backgroundColor:ds[0].color+'CC',borderColor:ds[0].color,borderWidth:1.5,borderRadius:4}];}
-  new Chart(ctx,{type:cfg.type==='line'?'line':cfg.type==='pie'?'pie':'bar',data:{labels:cfg.labels,datasets:chartDs},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:ds.length>1||cfg.type==='pie',position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}},tooltip:{bodyFont:{size:11},titleFont:{size:11}}},scales:cfg.type==='pie'?{}:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}}}},animation:{duration:500}}});
+function buildTable(matrixData) {
+  if (!matrixData || !matrixData.length) return '';
+  const headLabels = Object.keys(matrixData[0]);
+  return `
+  <div class="table-viewport">
+    <table class="data-grid">
+      <thead><tr>${headLabels.map(lbl => `<th>${escapeTxt(lbl)}</th>`).join('')}</tr></thead>
+      <tbody>${matrixData.map(row => `<tr>${headLabels.map(lbl => `<td>${escapeTxt(String(row[lbl] ?? ''))}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>
+  </div>`;
 }
 
-// ── Dashboard loader ────────────────────────────────────────
-async function loadDashboard(){
-  try{
-    const r=await fetch(API+'/api/data');const d=await r.json();
-    const {pipeline,revenue,incidents,team,prospects}=d;
-    const won=pipeline.filter(r=>r.Stage==='Closed Won');
-    const lost=pipeline.filter(r=>r.Stage==='Closed Lost');
-    const totalRev=revenue.reduce((s,r)=>s+r.Revenue,0);
-    const totalDeals=revenue.reduce((s,r)=>s+r.Deals,0);
-    const winRate=Math.round((won.length/pipeline.length)*100);
-    const avgRes=(incidents.reduce((s,i)=>s+i.ResolutionTime_hrs,0)/incidents.length).toFixed(1);
-    document.getElementById('kpiRow').innerHTML=`
-      <div class="kpi"><div class="kpi-label">FY2025 Revenue</div><div class="kpi-val">₹${(totalRev/100000).toFixed(0)}L</div><div class="kpi-trend kpi-up">+28% YoY</div></div>
-      <div class="kpi"><div class="kpi-label">Deals Closed</div><div class="kpi-val">${totalDeals}</div><div class="kpi-sub">ACE + Sweet Hello AI</div></div>
-      <div class="kpi"><div class="kpi-label">Pipeline Win Rate</div><div class="kpi-val">${winRate}%</div><div class="kpi-sub">${won.length} won / ${lost.length} lost</div></div>
-      <div class="kpi"><div class="kpi-label">MEMORA — Avg Resolution</div><div class="kpi-val">${avgRes}h</div><div class="kpi-sub">${incidents.length} incidents · all resolved</div></div>`;
-    const quarters=[...new Set(revenue.map(r=>r.Quarter))];
-    const aceQ=quarters.map(q=>revenue.filter(r=>r.Quarter===q&&r.Product==='ACE Platform').reduce((s,r)=>s+r.Revenue,0));
-    const shQ=quarters.map(q=>revenue.filter(r=>r.Quarter===q&&r.Product==='Sweet Hello AI').reduce((s,r)=>s+r.Revenue,0));
-    setTimeout(()=>{new Chart(document.getElementById('revChart').getContext('2d'),{type:'line',data:{labels:quarters,datasets:[{label:'ACE Platform',data:aceQ.map(v=>+(v/100000).toFixed(1)),borderColor:'#4F46E5',backgroundColor:'#4F46E518',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#4F46E5',borderWidth:2},{label:'Sweet Hello AI',data:shQ.map(v=>+(v/100000).toFixed(1)),borderColor:'#0284C7',backgroundColor:'#0284C718',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#0284C7',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}}}}}});},100);
-    const verts={};won.forEach(r=>{verts[r.Vertical]=(verts[r.Vertical]||0)+r.DealValue});
-    const vE=Object.entries(verts).sort((a,b)=>b[1]-a[1]);
-    setTimeout(()=>{new Chart(document.getElementById('vertChart').getContext('2d'),{type:'bar',data:{labels:vE.map(([v])=>v),datasets:[{data:vE.map(([,v])=>+(v/100000).toFixed(1)),backgroundColor:PALETTE.map(c=>c+'CC'),borderColor:PALETTE,borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}}}}}});},120);
-    const prods={};revenue.forEach(r=>{prods[r.Product]=(prods[r.Product]||0)+r.Revenue});
-    const pE=Object.entries(prods);
-    setTimeout(()=>{new Chart(document.getElementById('prodChart').getContext('2d'),{type:'pie',data:{labels:pE.map(([p])=>p),datasets:[{data:pE.map(([,v])=>+(v/100000).toFixed(1)),backgroundColor:['#4F46E5CC','#0284C7CC'],borderColor:['#4F46E5','#0284C7'],borderWidth:1.5,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}}}});},140);
-    const mkts={};won.forEach(r=>{mkts[r.Region]=(mkts[r.Region]||0)+r.DealValue});
-    const mE=Object.entries(mkts);
-    setTimeout(()=>{new Chart(document.getElementById('mktChart').getContext('2d'),{type:'pie',data:{labels:mE.map(([r])=>r+' Market'),datasets:[{data:mE.map(([,v])=>+(v/100000).toFixed(1)),backgroundColor:['#4F46E5CC','#059669CC'],borderColor:['#4F46E5','#059669'],borderWidth:1.5,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}}}});},160);
-    const execs=[...new Set(pipeline.map(r=>r.AccountExec))];
-    setTimeout(()=>{new Chart(document.getElementById('wlChart').getContext('2d'),{type:'bar',data:{labels:execs.map(e=>e.split(' ')[0]),datasets:[{label:'Won',data:execs.map(e=>won.filter(r=>r.AccountExec===e).length),backgroundColor:'#05966990',borderColor:'#059669',borderWidth:1.5,borderRadius:4},{label:'Lost',data:execs.map(e=>lost.filter(r=>r.AccountExec===e).length),backgroundColor:'#DC262690',borderColor:'#DC2626',borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyleWidth:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}}}}}});},180);
-    const incList=document.getElementById('incList');
-    const sortedInc=[...incidents].sort((a,b)=>new Date(b.Date)-new Date(a.Date)).slice(0,8);
-    incList.innerHTML=sortedInc.map(i=>{
-      const sevCls=i.Severity==='Critical'?'sev-crit':i.Severity==='High'?'sev-high':'sev-med';
-      const tagCls=i.Severity==='Critical'?'is-crit':i.Severity==='High'?'is-high':'is-med';
-      return`<div class="inc-row"><div class="sev-dot ${sevCls}"></div><div class="inc-id">${esc(i.IncidentID)}</div><div class="inc-info"><div class="inc-sys">${esc(i.System)} — ${esc(i.Category)}</div><div class="inc-cause">${esc(i.RootCause)}</div><div class="inc-meta">Resolved by ${esc(i.ResolvedBy)} · ${i.ResolutionTime_hrs}h · ${esc(i.Date)}</div></div><span class="inc-sev-tag ${tagCls}">${esc(i.Severity)}</span></div>`;
-    }).join('');
-  }catch(e){console.error('Dashboard error:',e)}
+const COLOR_SET = ['#1A56A8', '#0E7490', '#059669', '#D97706', '#B91C1C', '#7C3AED', '#0891B2'];
+function invokeChartRendering(targetCanvasId, configurations) {
+  const node = document.getElementById(targetCanvasId);
+  if (!node) return;
+  const metricsSets = configurations.datasets; 
+  let mappedDatasetsStructure;
+
+  if (configurations.type === 'pie') {
+    const pieColors = metricsSets[0].colors || COLOR_SET;
+    mappedDatasetsStructure = [{
+      data: metricsSets[0].data,
+      backgroundColor: pieColors.map(c => c + 'CC'),
+      borderColor: pieColors,
+      borderWidth: 1.5,
+      hoverOffset: 4
+    }];
+  } else if (configurations.type === 'bar' && metricsSets.length > 1) {
+    mappedDatasetsStructure = metricsSets.map(ds => ({
+      label: ds.label,
+      data: ds.data,
+      backgroundColor: ds.color + 'BB',
+      borderColor: ds.color,
+      borderWidth: 1,
+      borderRadius: 4
+    }));
+  } else if (configurations.type === 'line') {
+    mappedDatasetsStructure = metricsSets.map(ds => ({
+      label: ds.label,
+      data: ds.data,
+      borderColor: ds.color,
+      backgroundColor: ds.color + '12',
+      fill: true,
+      tension: 0.35,
+      pointRadius: 3,
+      pointBackgroundColor: ds.color,
+      borderWidth: 2
+    }));
+  } else {
+    mappedDatasetsStructure = [{
+      data: metricsSets[0].data,
+      backgroundColor: metricsSets[0].color + 'BB',
+      borderColor: metricsSets[0].color,
+      borderWidth: 1,
+      borderRadius: 4
+    }];
+  }
+
+  new Chart(node.getContext('2d'), {
+    type: configurations.type === 'line' ? 'line' : configurations.type === 'pie' ? 'pie' : 'bar',
+    data: { labels: configurations.labels, datasets: mappedDatasetsStructure },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: metricsSets.length > 1 || configurations.type === 'pie',
+          position: 'bottom',
+          labels: { font: { size: 11, family: 'DM Sans' }, padding: 8, usePointStyle: true, pointStyleWidth: 7 }
+        },
+        tooltip: { bodyFont: { size: 11 }, titleFont: { size: 11 } }
+      },
+      scales: configurations.type === 'pie' ? {} : {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { grid: { color: 'rgba(0,0,0,0.03)' }, ticks: { font: { size: 11 } } }
+      },
+      animation: { duration: 350 }
+    }
+  });
 }
 
-// ── Utils ───────────────────────────────────────────────────
-function tbl(rows){
-  if(!rows||!rows.length)return'';
-  const heads=Object.keys(rows[0]);
-  return`<div class="tbl-wrap"><table class="dt"><thead><tr>${heads.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${heads.map(h=>`<td>${esc(String(r[h]??''))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+function boldFormat(text) { return escapeTxt(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
+function escapeTxt(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function autoScroll(frame) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (frame) frame.scrollTop = frame.scrollHeight;
+  }));
 }
-function fmt(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function scroll2end(feed){requestAnimationFrame(()=>{requestAnimationFrame(()=>{if(feed)feed.scrollTop=feed.scrollHeight})})}
 </script>
 </body>
 </html>
